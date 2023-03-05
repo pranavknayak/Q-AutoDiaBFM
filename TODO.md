@@ -1,0 +1,3 @@
+- add in comments if possbile
+- resolve all the commetns with questions
+- if possible try to make an enum for threadingStyle which will be applicable in all the files
