@@ -5,8 +5,8 @@
 import ast
 
 
-def detectIncorrectMeasurement(editScript):
+def detectQubitOrder(editScript):
     status = True
-    bugTypeMessage = "Measurement performed incorrectly."
+    bugTypeMessage = "Incorrect order of qubits used."
 
     return status, bugTypeMessage

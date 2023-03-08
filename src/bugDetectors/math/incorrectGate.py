@@ -5,8 +5,8 @@
 import ast
 
 
-def detectIncorrectGate(edit_script):
-    prune = True # We have to prune it anyway but it is not the same as status, the actual thing
+def detectIncorrectGate(editScript):
+    status = True
+    bugTypeMessage = "Incorrect gate(s) used."
 
-    return 
-
+    return status, bugTypeMessage

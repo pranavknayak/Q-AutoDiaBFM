@@ -1,3 +1,3 @@
 import bugInvestigator as bI
 
-bI.classifyBugs(buggy = "test", patched = "test1", commandLine = False)
+print(bI.classifyBugs(buggy = "test0", patched = "test1", commandLine = False))

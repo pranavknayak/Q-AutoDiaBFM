@@ -5,8 +5,8 @@
 import ast
 
 
-def detectIncorrectMeasurement(editScript):
+def detectQubitCount(editScript):
     status = True
-    bugTypeMessage = "Measurement performed incorrectly."
+    bugTypeMessage = "Incorrect number of qubits used."
 
     return status, bugTypeMessage

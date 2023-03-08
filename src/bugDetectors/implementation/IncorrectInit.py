@@ -5,8 +5,8 @@
 import ast
 
 
-def detectIncorrectMeasurement(editScript):
+def detectIncorrectInit(editScript):
     status = True
-    bugTypeMessage = "Measurement performed incorrectly."
+    bugTypeMessage = "Initialization done incorrectly."
 
     return status, bugTypeMessage

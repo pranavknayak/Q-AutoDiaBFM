@@ -1,3 +1,4 @@
 - add in comments if possbile
 - resolve all the commetns with questions
 - if possible try to make an enum for threadingStyle which will be applicable in all the files
+- right now even there are multiple bug-fixes in the file, it will only report the first bug it finds. Improve this to show all the bug-fixes if possible.
