@@ -7,6 +7,6 @@ import ast
 
 def detectIncorrectGate(editScript):
     status = True
-    bugTypeMessage = "Incorrect gate(s) used."
+    bugTypeMessage = "Incorrect usage of gate(s)."
 
     return status, bugTypeMessage
