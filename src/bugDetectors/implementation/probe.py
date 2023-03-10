@@ -7,7 +7,7 @@ import threading
 
 
 def assessBugClass(editScript):
-    prune = True
+    prune = False
     # Add in the pakad here
     return prune
 
@@ -16,15 +16,15 @@ def assessBugType(bugFolder: str, editScript, style: threadingStyle):
     bugTypeMessage = ""
     bugDirectoryHandle = Path(__file__).parent.glob('**/*.py')
     bugFiles = [os.path.basename(bugFile) for bugFile in bugDirectoryHandle]
-    shouldThread = True
+    # shouldThread = True
 
-    if style == threadingStyle.nil:
-        shouldThread = False
-    elif style == threadingStyle.random:
-        if random.rangerange(0, 2, 1) == 0: 
-            shouldThread = False
-        else: 
-            shouldThread = True
+    # if style == threadingStyle.nil:
+    #     shouldThread = False
+    # elif style == threadingStyle.random:
+    #     if random.rangerange(0, 2, 1) == 0: 
+    #         shouldThread = False
+    #     else: 
+    #         shouldThread = True
 
     for bugFile in bugFiles: # Thread it as appropriate
         if bugFile == '__init__.py' or bugFile == 'probe.py': continue

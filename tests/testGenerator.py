@@ -10,6 +10,7 @@ bugDatasetRootDirectoryPath = "../Q-AutoDiaBFM/tests/bugDataset"
 
 def runTests(bugTestFiles, characteristicBugMessage):
     allTestsPassed = False
+    bugCounter = 1
     failedTestFiles = []
     numberOfTestsPassed = 0
 
@@ -19,14 +20,16 @@ def runTests(bugTestFiles, characteristicBugMessage):
                                                     bugDatasetRootDirectoryPath + "/" + bugTestFileName)
         bugTypeMessage = bI.classifyBugs(bugTestFileProber.buggyCode, bugTestFileProber, commandLine = False)
         if bugTypeMessage != characteristicBugMessage:
-            failedTestFiles.append((bugTypeMessage, bugTestFile))
+            failedTestFiles.append((bugCounter, bugTypeMessage, bugTestFile))
         numberOfTestsPassed += (bugTypeMessage == characteristicBugMessage)
+        bugCounter += 1
 
     allTestsPassed = (numberOfTestsPassed == len(bugTestFiles))
 
     if not allTestsPassed:
-        print(f"{len(bugTestFiles) - numberOfTestsPassed} tests failed! Failed tests are displayed below:\n") 
-        for bugTypeMessage, failedTestFile in failedTestFiles:
+        print(f"{len(bugTestFiles) - numberOfTestsPassed} / {len(bugTestFiles)} tests failed! Failed tests are displayed below:\n") 
+        for bugIndex, bugTypeMessage, failedTestFile in failedTestFiles:
+            print("<===============================", f"Test {bugIndex}", "===============================>", "\n")
             with open(failedTestFile) as bugFormatter:
                 print(bugFormatter.read())
             print("(Wrong) error message:", bugTypeMessage, "\n")

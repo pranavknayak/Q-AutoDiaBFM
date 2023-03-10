@@ -6,7 +6,7 @@ import ast
 
 
 def detectIncorrectMeasurement(editScript):
-    status = True
+    status = False
     bugTypeMessage = "Measurement(s) performed incorrectly."
 
     return status, bugTypeMessage

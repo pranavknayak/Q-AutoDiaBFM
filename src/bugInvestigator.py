@@ -28,14 +28,14 @@ def probeBugs(buggy, patched):
     findProbeFile()
     prober = importlib.import_module(bugDataRootDirectoryName + "." + bugPruningFileName,
                                       bugPruningFilePath)
-    status, bugTypeMessage = prober.assessBugType(bugDataRootDirectoryName, codeDifference.edit_script(),
+    status, bugTypeMessage = prober.assessBugClass(bugDataRootDirectoryName, codeDifference.edit_script(),
                                                   threadingStyle.nil.value)
-    if status == False:
+    if status == False: # Or that there is a bug category which we are unable to identify (captured by msg below already)
         bugTypeMessage = "No quantum error detected!"
     return bugTypeMessage
 
-def processFiles(buggy = None, patched = None, commandLine = True): # You have to pass in the buggy fileaname directory first, followed by the patched one
-    # Get the file names from command line arguments
+def processFiles(buggy = None, patched = None, commandLine = True): # The buggy filename directory first, followed by the patched one.
+    # Get the file names from command line arguments.
     commentedBuggySrc = ""
     commentedPatchedSrc = ""
     if commandLine == True:

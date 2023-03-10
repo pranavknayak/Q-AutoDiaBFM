@@ -6,3 +6,5 @@
 - ther should be exactly one probe.py per folder, otherwise we will raise an exception? Becauase it may get confused otherwise.
 - store the bug datasets also in this tree manner (is it required?)
 - custom test handler right now requires exactly correct test to be passed
+- add in colored text for the tests?
+- once some bugclass has returned true, the bug must lie in that domain!

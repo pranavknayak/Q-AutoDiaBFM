@@ -6,7 +6,7 @@ import ast
 
 
 def detectQubitOrder(editScript):
-    status = True
+    status = False
     bugTypeMessage = "Incorrect order of qubits used."
 
     return status, bugTypeMessage

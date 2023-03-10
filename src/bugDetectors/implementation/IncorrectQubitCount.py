@@ -6,7 +6,7 @@ import ast
 
 
 def detectQubitCount(editScript):
-    status = True
+    status = False
     bugTypeMessage = "Incorrect number of qubits used."
 
     return status, bugTypeMessage

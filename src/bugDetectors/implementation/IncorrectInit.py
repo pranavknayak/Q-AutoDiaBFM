@@ -6,7 +6,7 @@ import ast
 
 
 def detectIncorrectInit(editScript):
-    status = True
+    status = False
     bugTypeMessage = "Incorrect initialization(s) attempted."
 
     return status, bugTypeMessage
