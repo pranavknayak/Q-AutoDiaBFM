@@ -6,12 +6,12 @@ import random
 import threading
 
 
-def assessBugClass(editScript):
+def assessBugClass(codeSample):
     prune = True
     # Add in the pakad here
     return prune
 
-def assessBugType(bugFolder: str, editScript, style: threadingStyle):
+def assessBugType(bugFolder: str, codeSample, style: threadingStyle):
     prune = False
     bugTypeMessage = ""
     bugDirectoryHandle = Path(__file__).parent.glob('**/*.py')
@@ -31,7 +31,7 @@ def assessBugType(bugFolder: str, editScript, style: threadingStyle):
         prober = importlib.import_module(bugFolder + "." + bugFile[:-3], 
                                          "../" + bugFolder + "/" + bugFile)
         bugDetector = getattr(prober, "detect" + bugFile[:-3])
-        status, bugTypeMessage = bugDetector(editScript)
+        status, bugTypeMessage = bugDetector(codeSample)
         if status == True:
             prune = True
             break

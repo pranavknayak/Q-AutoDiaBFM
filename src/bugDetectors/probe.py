@@ -6,7 +6,7 @@ import threading
 
 bugPruningFileName = "probe"
 
-def assessBugClass(bugFolder: str, editScript, style: threadingStyle):
+def assessBugClass(bugFolder: str, codeSample, style: threadingStyle):
     prune = False
     _bugPackage_ = ""
     bugTypeMessage = ""
@@ -18,7 +18,7 @@ def assessBugClass(bugFolder: str, editScript, style: threadingStyle):
         if bugPackage == "__pycache__": continue
         prober = importlib.import_module(bugFolder + "." + bugPackage + "." + bugPruningFileName, 
                                          "../" + bugPackage + "/" + bugPruningFileName + ".py")
-        if prober.assessBugClass(editScript) == True:
+        if prober.assessBugClass(codeSample) == True:
             _bugPackage_ = bugPackage
             prune = True
             break
@@ -26,5 +26,5 @@ def assessBugClass(bugFolder: str, editScript, style: threadingStyle):
     if prune == True:
         prober = importlib.import_module(bugFolder + "." + _bugPackage_ + "." + bugPruningFileName, 
                                        "../" + _bugPackage_ + "/" + bugPruningFileName + ".py")
-        _, bugTypeMessage = prober.assessBugType(bugFolder + "." + _bugPackage_, editScript, style)
+        _, bugTypeMessage = prober.assessBugType(bugFolder + "." + _bugPackage_, codeSample, style)
     return prune, bugTypeMessage

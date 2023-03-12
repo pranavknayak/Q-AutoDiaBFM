@@ -5,21 +5,17 @@
 import ast
 import code_diff
 
-def detectIncorrectGate(editScript):
+def detectIncorrectGate(codeSample):
     status = False
     bugTypeMessage = "Incorrect usage of gate(s)."
     # print(type(editScript))
-    print(editScript)
+    # print(editScript)
     # list = [x, h, t, s, ]
-    # cc = code_diff.difference('''
-    # qc = QuantumCircuit(2)
-    # qc.x(1)
-    # qc.draw()
-    # ''',
-    # '''
-    # qc = QuantumCircuit(2)
-    # qc.h(1)
-    # qc.draw()
-    # ''', lang = 'python')
-    # print(cc.edit_script())
+    cc = code_diff.difference('''
+    x = 5
+    ''',
+    '''
+    h = 5
+    ''', lang = 'python')
+    print(cc.edit_script())
     return status, bugTypeMessage

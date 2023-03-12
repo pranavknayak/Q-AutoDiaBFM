@@ -5,7 +5,7 @@
 import ast
 
 
-def detectIncorrectMeasurement(editScript):
+def detectIncorrectMeasurement(codeSample):
     status = False
     bugTypeMessage = "Measurement(s) performed incorrectly."
 

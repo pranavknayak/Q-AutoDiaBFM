@@ -28,7 +28,8 @@ def probeBugs(buggy, patched):
     findProbeFile()
     prober = importlib.import_module(bugDataRootDirectoryName + "." + bugPruningFileName,
                                       bugPruningFilePath)
-    status, bugTypeMessage = prober.assessBugClass(bugDataRootDirectoryName, codeDifference.edit_script(),
+    codeSample = (buggy, codeDifference.edit_script(), patched)
+    status, bugTypeMessage = prober.assessBugClass(bugDataRootDirectoryName, codeSample,
                                                   threadingStyle.nil.value)
     if status == False: # Or that there is a bug category which we are unable to identify (captured by msg below already)
         bugTypeMessage = "No quantum error detected!"
