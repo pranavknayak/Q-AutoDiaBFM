@@ -44,7 +44,7 @@ def testIncorrectGate():
     allTestsPassed = False
     bugTestFilesHandler = Path(bugDatasetRootDirectoryPath).glob('**/IncorrectGate*.py')
     bugTestFiles = [bugTestFile for bugTestFile in bugTestFilesHandler]
-    characteristicBugMessage = "Incorrect gate(s) used."
+    characteristicBugMessage = "Incorrect usage of gate(s)."
 
     print("Testing incorrect usage of gate(s).")
     allTestsPassed = runTests(bugTestFiles, characteristicBugMessage)
