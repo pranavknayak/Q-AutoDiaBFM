@@ -8,14 +8,32 @@ import code_diff
 def detectIncorrectGate(codeSample):
     status = False
     bugTypeMessage = "Incorrect usage of gate(s)."
+    '''
+    1. Inbuilt gates based errors.
+        a. single line errors.
+        b. multiline errors.
+    2. Customised gates based errors.
+    '''
+
+    print(codeSample[1])
+
+    # Handling 1a
+
+    availableInbuiltGates = ['cx', 'h', 'i', 'p', 's', 'sdg', 't', 'u', 'x', 'y', 'z']
+
+
+
+
     # print(type(editScript))
     # print(editScript)
     # list = [x, h, t, s, ]
-    cc = code_diff.difference('''
-    x = 5
-    ''',
-    '''
-    h = 5
-    ''', lang = 'python')
-    print(cc.edit_script())
+    # using b, p codes, I will check if it is of the form qc.<gate? -> qc.<another gate>
+
+    # cc = code_diff.difference('''
+    # x = 5
+    # ''',
+    # '''
+    # h = 5
+    # ''', lang = 'python')
+    # print(cc.edit_script())
     return status, bugTypeMessage

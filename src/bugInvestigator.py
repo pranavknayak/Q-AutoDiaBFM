@@ -52,7 +52,7 @@ def processFiles(buggy = None, patched = None, commandLine = True): # The buggy 
     else:
         commentedBuggySrc = str(buggy)
         commentedPatchedSrc = str(patched)
-    
+
     return commentedBuggySrc, commentedPatchedSrc
 
 def classifyBugs(buggy = None, patched = None, commandLine = True):

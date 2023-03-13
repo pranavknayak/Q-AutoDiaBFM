@@ -18,7 +18,7 @@ def runTests(bugTestFiles, characteristicBugMessage):
         bugTestFileName = os.path.basename(bugTestFile)
         bugTestFileProber = importlib.import_module(bugDatasetRootDirectoryName + "." + bugTestFileName[:-3],
                                                     bugDatasetRootDirectoryPath + "/" + bugTestFileName)
-        bugTypeMessage = bI.classifyBugs(bugTestFileProber.buggyCode, bugTestFileProber, commandLine = False)
+        bugTypeMessage = bI.classifyBugs(bugTestFileProber.buggyCode, bugTestFileProber.patchedCode, commandLine = False)
         if bugTypeMessage != characteristicBugMessage:
             failedTestFiles.append((bugCounter, bugTypeMessage, bugTestFile))
         numberOfTestsPassed += (bugTypeMessage == characteristicBugMessage)
