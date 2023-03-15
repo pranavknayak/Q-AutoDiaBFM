@@ -43,7 +43,7 @@ def inbuiltGateError(codeSample):
                 if (buggyGate not in availableInbuiltGates) and (patchedGate not in availableInbuiltGates):
                     continue
                 if buggyGate in availableInbuiltGates and patchedGate in availableInbuiltGates:
-                    if buggyGate == patchGate:
+                    if buggyGate == patchedGate:
                         return False
                 else:
                     return False
