@@ -21,10 +21,14 @@ def assessBugClass(bugFolder: str, codeSample, style: threadingStyle):
         if prober.assessBugClass(codeSample) == True:
             _bugPackage_ = bugPackage
             prune = True
-            break
-        
-    if prune == True:
-        prober = importlib.import_module(bugFolder + "." + _bugPackage_ + "." + bugPruningFileName, 
-                                       "../" + _bugPackage_ + "/" + bugPruningFileName + ".py")
-        _, bugTypeMessage = prober.assessBugType(bugFolder + "." + _bugPackage_, codeSample, style)
+            # break
+        if prune == True:
+            prober = importlib.import_module(bugFolder + "." + _bugPackage_ + "." + bugPruningFileName, 
+                                        "../" + _bugPackage_ + "/" + bugPruningFileName + ".py")
+            status, bugTypeMessage = prober.assessBugType(bugFolder + "." + _bugPackage_, codeSample, style)
+            if status == True:
+                break
+            else: 
+                prune = False
+                continue 
     return prune, bugTypeMessage

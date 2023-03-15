@@ -7,3 +7,4 @@
 - For now in IncorrectGate, we have implemented assuming QuantumCircuit is used only once.
 - In testGenerator.py, add a way in runTests, by which it can iterate over all the bugTypedirectories 
 and run the test<bugType> function under status |=.
+- In first probe.py did temporary change to probe.py to allow both impl and math probes' assessBugClass to return true and then proceed forward. Obviously need to add in the actual code for math and impl later.
