@@ -3,9 +3,13 @@ The following code-pair contains an IncorrectInit bug.
 '''
 
 buggyCode = '''
-x = 5
+qc = QuantumCircuit(3)
+qc.x(0 + 1)
+qc.draw()
 '''
 
 patchedCode = '''
-xx = 5
+qc = QuantumCircuit(3)
+qc.x(1 + 1)
+qc.draw()
 '''

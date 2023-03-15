@@ -3,9 +3,15 @@ The following code-pair does not contain an IncorrectInit bug.
 '''
 
 buggyCode = '''
-x = 5
+qc = QuantumCircuit(3, 3)
+qc.h(0)
+qc.x(range(3))
+qc.measure([0,1], [0, 1])
 '''
 
 patchedCode = '''
-xx = 5
+qc = QuantumCircuit(3, 3)
+qc.h(0)
+qc.x(range(3))
+qc.measure([0,1], [1, 0])
 '''
