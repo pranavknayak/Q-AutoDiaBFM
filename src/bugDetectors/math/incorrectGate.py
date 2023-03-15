@@ -46,7 +46,7 @@ def singleLineInbuiltGateError(codeSample):
             if (buggyGate not in availableInbuiltGates) or (patchedGate not in availableInbuiltGates) or (buggyGate == patchedGate):
                 return False
             
-            
+                 
         else:
             return False
     else:
