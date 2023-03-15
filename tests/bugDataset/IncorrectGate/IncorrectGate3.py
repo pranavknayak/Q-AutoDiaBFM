@@ -1,12 +1,17 @@
-#This is basically the buggy code and patched Code
+'''
+The following code-pair does not contain an IncorrectGate bug.
+'''
+
 buggyCode = '''
-qc = QuantumCircuit(2)
-qc.x(1)
-qc.draw()
+qc = QuantumCircuit(3, 3)
+qc.h(0)
+qc.x(range(3))
+qc.measure([0,1], [0, 1])
 '''
 
 patchedCode = '''
-q = QuantumCircuit(2)
-q.tdg(1)
-q.draw()
+qc = QuantumCircuit(3, 3)
+qc.h(0)
+qc.x(range(3))
+qc.measure([0,1], [1, 0])
 '''

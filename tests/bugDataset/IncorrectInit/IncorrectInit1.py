@@ -1,3 +1,7 @@
+'''
+The following code-pair contains an IncorrectInit bug.
+'''
+
 buggyCode = '''
 x = 5
 '''

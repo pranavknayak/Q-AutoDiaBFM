@@ -1,4 +1,7 @@
-#This is basically the buggy code and patched Code used to check the Bug Pattern
+'''
+The following code-pair contains an IncorrectInit bug.
+'''
+
 buggyCode = '''
 qc = QuantumCircuit(2)
 qc.h(0)

@@ -5,7 +5,6 @@
 import ast
 import re
 
-
 def inbuiltGateError(codeSample):
     availableInbuiltGates = ['ccx', 'cx', 'h', 'i', 'p', 's', 'sdg', 't', 'tdg', 'u', 'x', 'y', 'z']
     regexPattern = " *Update\(\(identifier:.+, *line [0-9]+:[0-9] - [0-9]+:[0-9]\), .+\) *"
@@ -32,25 +31,24 @@ def inbuiltGateError(codeSample):
     if len(buggyID) != len(patchedID):
         return False
 
-    if len(codeSample[1]) > 0:
+    if len(codeSample[1]):
         diffList = str(codeSample[1]).split('\n')
         for change in range(len(diffList)):
             temporaryStatus = re.search(regexPattern, diffList[change])
             if temporaryStatus is not None:
                 buggyGate = diffList[change].split("((identifier:")[1].split(",")[0]
                 patchedGate = diffList[change].split("), ")[1].split(")")[0]
-                lineNumber = int(diffList[change].split("line")[1].split(":")[0])
-                if (buggyGate not in availableInbuiltGates) and (patchedGate not in availableInbuiltGates):
+                if (buggyGate in buggyID) and (patchedGate in patchedID):
                     continue
                 if buggyGate in availableInbuiltGates and patchedGate in availableInbuiltGates:
-                    if buggyGate == patchedGate:
-                        return False
+                    if buggyGate != patchedGate:
+                        return True
                 else:
-                    return False
+                    return True
     else:
         return False
-    
-    return True
+
+    return False
 
 
 def detectIncorrectGate(codeSample):

@@ -1,7 +1,15 @@
+'''
+The following code-pair does not contain an IncorrectMeasurement bug.
+'''
+
 buggyCode = '''
-x = 5
+a = QuantumCircuit(2)
+a.sdg(1)
+a.draw()
 '''
 
 patchedCode = '''
-xx = 5
+qc = QuantumCircuit(2)
+qc.tdg(1)
+qc.draw()
 '''

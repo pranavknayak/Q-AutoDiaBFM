@@ -1,4 +1,7 @@
-#This is basically the buggy code and patched Code
+'''
+The following code-pair contains an IncorrectGate bug.
+'''
+
 buggyCode = '''
 qc = QuantumCircuit(2)
 qc.x(1)

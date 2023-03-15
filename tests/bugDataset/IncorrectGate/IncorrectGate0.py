@@ -1,3 +1,7 @@
+'''
+The following code-pair contains an IncorrectGate bug.
+'''
+
 buggyCode = '''
 a = QuantumCircuit(2)
 a.sdg(1)
