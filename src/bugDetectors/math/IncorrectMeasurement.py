@@ -3,6 +3,7 @@
 # provided the identifier is the same, check if the other files' gate matches with an inbuilt gate.
 # incase it is a custom made gate, think
 import ast
+import re
 
 def measurementTimingError(codeSamole):
 
@@ -10,8 +11,21 @@ def measurementTimingError(codeSamole):
 
 def measurementRegisterError(codeSample):
     availableMeasurementFunctions = ['measure', 'measure_all', 'measure_inactive']
+    regexPattern = ""
 
-    return False
+    if len(codeSample[1]) == 1:
+        editScriptStringed = str(codeSample[1])[2:-2]
+        temporaryStatus = re.search(regexPattern, editScriptStringed)
+        if temporaryStatus is not None:
+            buggyFunctionIdentifier = editScriptStringed.split()
+            patchedFunctionIdentifier = editScriptStringed.split()
+            if (buggyFunctionIdentifier not in availableMeasurementFunctions) or (patchedFunctionIdentifier not in availableMeasurementFunctions):
+                return False
+            
+    else:
+        return False
+            
+    return True
 
 
 

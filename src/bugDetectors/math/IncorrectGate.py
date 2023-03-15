@@ -9,16 +9,10 @@ import re
 def inbuiltGateError(codeSample):
     availableInbuiltGates = ['ccx', 'cx', 'h', 'i', 'p', 's', 'sdg', 't', 'tdg', 'u', 'x', 'y', 'z']
     regexPattern = " *Update\(\(identifier:.+, *line [0-9]+:[0-9] - [0-9]+:[0-9]\), .+\) *"
-
     buggy, patched = codeSample[0], codeSample[2]
-    buggyList, patchedList = buggy.split('\n'), patched.split('\n')
-    modify = ""
-    for j in buggyList:
-        modify += j + "\n"
-    print(modify)
     buggyID, patchedID = {}, {}
+
     astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
-    
     for node in astBuggy:
         if isinstance(node, ast.Assign):
             for id in getattr(node, 'targets'):
@@ -45,8 +39,6 @@ def inbuiltGateError(codeSample):
             patchedGate = editScriptStringed.split("), ")[1].split(")")[0]
             if (buggyGate not in availableInbuiltGates) or (patchedGate not in availableInbuiltGates) or (buggyGate == patchedGate):
                 return False
-            
-                 
         else:
             return False
     else:
