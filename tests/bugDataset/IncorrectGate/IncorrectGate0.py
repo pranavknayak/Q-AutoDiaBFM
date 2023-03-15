@@ -1,7 +1,7 @@
 buggyCode = '''
-qc = QuantumCircuit(2)
-qc.sdg(1)
-qc.draw()
+a = QuantumCircuit(2)
+a.sdg(1)
+a.draw()
 '''
 
 patchedCode = '''
