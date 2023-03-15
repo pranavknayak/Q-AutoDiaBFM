@@ -1,3 +1,4 @@
+#This is basically the buggy code and patched Code
 buggyCode = '''
 qc = QuantumCircuit(2)
 qc.x(1)

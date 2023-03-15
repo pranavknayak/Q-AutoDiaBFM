@@ -7,19 +7,46 @@ import re
 
 
 def singleLineInbuiltGateError(codeSample):
-    availableInbuiltGates = ['cx', 'h', 'i', 'p', 's', 'sdg', 't', 'tdg', 'u', 'x', 'y', 'z']
+    availableInbuiltGates = ['ccx', 'cx', 'h', 'i', 'p', 's', 'sdg', 't', 'tdg', 'u', 'x', 'y', 'z']
     regexPattern = " *Update\(\(identifier:.+, *line [0-9]+:[0-9] - [0-9]+:[0-9]\), .+\) *"
+
+    buggy, patched = codeSample[0], codeSample[2]
+    buggyList, patchedList = buggy.split('\n'), patched.split('\n')
+    temp = ""
+    for j in buggyList:
+        temp += j + "\n"
+    print(temp)
+    buggyID, patchedID = {}, {}
+    astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
+    
+    for node in astBuggy:
+        if isinstance(node, ast.Assign):
+            for id in getattr(node, 'targets'):
+                if id.id not in buggyID and getattr(node, 'value').func.id == "QuantumCircuit":
+                    buggyID[id.id] = []
+    
+    for node in astPatched:
+        if isinstance(node, ast.Assign):
+            for id in getattr(node, 'targets'):
+                if id.id not in patchedID and getattr(node, 'value').func.id == "QuantumCircuit":
+                    patchedID[id.id] = []
+    
+    ''' Considering the cases when there is a one to one mapping of the QuantumCircuits 
+    in buggy code to the QuantumCircuits in patched code. '''
+
+    if len(buggyID) == 0 or len(buggyID) != len(patchedID):
+        return False
 
     if len(codeSample[1]) == 1:
         editScriptStringed = str(codeSample[1])[2:-2]
-        print(editScriptStringed)
         temporaryStatus = re.search(regexPattern, editScriptStringed)
         if temporaryStatus is not None:
             buggyGate = editScriptStringed.split("((identifier:")[1].split(",")[0]
             patchedGate = editScriptStringed.split("), ")[1].split(")")[0]
             if (buggyGate not in availableInbuiltGates) or (patchedGate not in availableInbuiltGates) or (buggyGate == patchedGate):
                 return False
-            # how to check if identifier is a qc
+            
+            
         else:
             return False
     else:

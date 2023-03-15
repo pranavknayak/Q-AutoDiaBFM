@@ -2,6 +2,7 @@ import importlib
 import os
 from pathlib import Path
 import sys
+import glob
 sys.path.insert(0, "../Q-AutoDiaBFM/src")
 import bugInvestigator as bI
 
@@ -15,9 +16,11 @@ def runTests(bugTestFiles, characteristicBugMessage):
     numberOfTestsPassed = 0
 
     for bugTestFile in bugTestFiles:
-        bugTestFileName = os.path.basename(bugTestFile)
-        bugTestFileProber = importlib.import_module(bugDatasetRootDirectoryName + "." + bugTestFileName[:-3],
-                                                    bugDatasetRootDirectoryPath + "/" + bugTestFileName)
+        #bugTestFileName = os.path.basename(bugTestFile)
+        print(bugDatasetRootDirectoryName + "." + bugTestFile[:-3],
+                                                    bugDatasetRootDirectoryPath + "/" + bugTestFile)
+        bugTestFileProber = importlib.import_module(bugDatasetRootDirectoryName + "." + bugTestFile[:-3],
+                                                    bugDatasetRootDirectoryPath + "/" + bugTestFile)
         bugTypeMessage = bI.classifyBugs(bugTestFileProber.buggyCode, bugTestFileProber.patchedCode, commandLine = False)
         if bugTypeMessage != characteristicBugMessage:
             failedTestFiles.append((bugCounter, bugTypeMessage, bugTestFile))
@@ -42,8 +45,11 @@ def dynamicTestHandler(numberOfTests: int, testAttribute: str): # To be tested.
 
 def testIncorrectGate():
     allTestsPassed = False
-    bugTestFilesHandler = Path(bugDatasetRootDirectoryPath).glob('**/IncorrectGate*.py')
-    bugTestFiles = [bugTestFile for bugTestFile in bugTestFilesHandler]
+    penultimateAddress = "IncorrectGate."
+    incorrectGateAddress = bugDatasetRootDirectoryPath + "/IncorrectGate/"
+    bugTestFilesHandler = Path(bugDatasetRootDirectoryPath).glob('**/IncorrectGate/IncorrectGate*.py')
+    bugTestFiles = [penultimateAddress + bugTestFile for bugTestFile in os.listdir(incorrectGateAddress) if bugTestFile[-3:] == ".py"]
+    print(bugTestFiles)
     characteristicBugMessage = "Incorrect usage of gate(s)."
 
     print("Testing incorrect usage of gate(s).")
@@ -54,8 +60,9 @@ def testIncorrectGate():
 
 def testIncorrectInit():
     allTestsPassed = False
-    bugTestFilesHandler = Path(bugDatasetRootDirectoryPath).glob('**/IncorrectInit*.py')
-    bugTestFiles = [bugTestFile for bugTestFile in bugTestFilesHandler]
+    penultimateAddress = "IncorrectInit/"
+    bugTestFilesHandler = Path(bugDatasetRootDirectoryPath).glob('**/IncorrectInit/IncorrectInit*.py')
+    bugTestFiles = [penultimateAddress + bugTestFile for bugTestFile in bugTestFilesHandler]
     characteristicBugMessage = "Incorrect initialization(s) attempted."
 
     print("Testing for the presence of incorrect initialization(s).")
@@ -66,8 +73,9 @@ def testIncorrectInit():
 
 def testIncorrectMeasurement():
     allTestsPassed = False
-    bugTestFilesHandler = Path(bugDatasetRootDirectoryPath).glob('**/IncorrectMeasurement*.py')
-    bugTestFiles = [bugTestFile for bugTestFile in bugTestFilesHandler]
+    penultimateAddress = "IncorrectMeasurement."
+    bugTestFilesHandler = Path(bugDatasetRootDirectoryPath).glob('**/IncorrectMeasurement/IncorrectMeasurement*.py')
+    bugTestFiles = [penultimateAddress + bugTestFile for bugTestFile in bugTestFilesHandler]
     characteristicBugMessage = "Measurement(s) performed incorrectly."
 
     print("Testing for the presence of incorrectly performed measurement(s).")
@@ -78,8 +86,9 @@ def testIncorrectMeasurement():
 
 def testIncorrectQubitCount():
     allTestsPassed = False
-    bugTestFilesHandler = Path(bugDatasetRootDirectoryPath).glob('**/IncorrectQubitCount*.py')
-    bugTestFiles = [bugTestFile for bugTestFile in bugTestFilesHandler]
+    penultimateAddress = "IncorrectQubitCount/"
+    bugTestFilesHandler = Path(bugDatasetRootDirectoryPath).glob('**/InorrectQubitCount/IncorrectQubitCount*.py')
+    bugTestFiles = [penultimateAddress + bugTestFile for bugTestFile in bugTestFilesHandler]
     characteristicBugMessage = "Incorrect number of qubits used."
 
     print("Testing usage of incorrect number of qubits.")
@@ -90,8 +99,9 @@ def testIncorrectQubitCount():
 
 def testIncorrectQubitOrder():
     allTestsPassed = False
-    bugTestFilesHandler = Path(bugDatasetRootDirectoryPath).glob('**/IncorrectQubitOrder*.py')
-    bugTestFiles = [bugTestFile for bugTestFile in bugTestFilesHandler]
+    penultimateAddress = "IncorrectQubitOrder/"
+    bugTestFilesHandler = Path(bugDatasetRootDirectoryPath).glob('**/IncorrectQubitOrder/IncorrectQubitOrder*.py')
+    bugTestFiles = [penultimateAddress + bugTestFile for bugTestFile in bugTestFilesHandler]
     characteristicBugMessage = "Incorrect order of qubits used."
 
     print("Testing usage of incorrect order of qubits.")

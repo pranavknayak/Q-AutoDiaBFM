@@ -5,3 +5,4 @@
 - implement testFunctions which can run specific tests
 - Add in threading while testing
 - Current individual bug tests assume commandLine = False; improve this later if possible
+- For now in IncorrectGate, we have implemented assuming QuantumCircuit is used only once.
