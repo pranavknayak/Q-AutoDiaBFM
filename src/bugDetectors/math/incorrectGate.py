@@ -6,7 +6,7 @@ import ast
 import re
 
 
-def singleLineInbuiltGateError(codeSample):
+def inbuiltGateError(codeSample):
     availableInbuiltGates = ['ccx', 'cx', 'h', 'i', 'p', 's', 'sdg', 't', 'tdg', 'u', 'x', 'y', 'z']
     regexPattern = " *Update\(\(identifier:.+, *line [0-9]+:[0-9] - [0-9]+:[0-9]\), .+\) *"
 
@@ -63,6 +63,6 @@ def detectIncorrectGate(codeSample):
         b. multiline errors.
     2. Customised gates based errors.
     '''
-    status |= singleLineInbuiltGateError(codeSample)
+    status |= inbuiltGateError(codeSample)
 
     return status, bugTypeMessage

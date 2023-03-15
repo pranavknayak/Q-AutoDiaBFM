@@ -4,11 +4,21 @@
 # incase it is a custom made gate, think
 import ast
 
+def measurementTimingError(codeSamole):
+
+    return False
+
+def measurementRegisterError(codeSample):
+    availableMeasurementFunctions = ['measure', 'measure_all', 'measure_inactive']
+
+    return False
+
+
 
 def detectIncorrectMeasurement(codeSample):
     status = False
     bugTypeMessage = "Measurement(s) performed incorrectly."
-    availableMeasurementFunctions = ['measure', 'measure_all', 'measure_inactive']
+    
 
     # again done only with a quantum circuit object.
     # 1. If the arguments are not matching then something is off.
