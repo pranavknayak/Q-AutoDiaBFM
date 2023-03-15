@@ -12,10 +12,10 @@ def inbuiltGateError(codeSample):
 
     buggy, patched = codeSample[0], codeSample[2]
     buggyList, patchedList = buggy.split('\n'), patched.split('\n')
-    temp = ""
+    modify = ""
     for j in buggyList:
-        temp += j + "\n"
-    print(temp)
+        modify += j + "\n"
+    print(modify)
     buggyID, patchedID = {}, {}
     astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
     
