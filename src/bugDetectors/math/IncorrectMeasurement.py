@@ -21,7 +21,8 @@ def measurementRegisterError(codeSample):
             patchedFunctionIdentifier = editScriptStringed.split()
             if (buggyFunctionIdentifier not in availableMeasurementFunctions) or (patchedFunctionIdentifier not in availableMeasurementFunctions):
                 return False
-            # either it is something like 
+            # either it is something like measure vs. measure_all
+            # or there are incorrect arguments to the measure* function
     else:
         return False
             
