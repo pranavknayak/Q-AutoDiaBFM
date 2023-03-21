@@ -1,6 +1,6 @@
 ### Automatic Diagnosis of Quantum Software Bug Fix Motifs
 
-## Q-Diff
+## Q-Diff [![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/organization/repository)
 ```Q-Diff``` is an automated tool that detects bug-fix patterns in quantum codes. The tools classifies pairs of buggy and patched codes based on AST-parsers, RegEx checks and other semantic checks. Currently, the tool is still in a proof-of-concept (PoC) stage and has been designed only for certain classes of Qiskit codes, namely those which only have a single bug in a single line in the buggy code, of any of the following $3$ types:
 - ```IncorrectGate```
 - ```IncorrectInit```
