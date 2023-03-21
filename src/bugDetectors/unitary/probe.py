@@ -1,3 +1,7 @@
+#imports required modules, including threading, os, and random. assessBugClass and 
+#assessBugType are two functions that take a code sample and return a Boolean value, 
+#where assessBugType scans through Python files in a given directory to load and execute each module, 
+#and the threading functionality is not yet implemented.
 from bugInvestigator import threadingStyle
 import importlib
 import os
