@@ -41,10 +41,10 @@ git clone https://github.com/KrishnKher/Q-AutoDiaBFM
 2. Navigate to the testRunner.py file:
 
 ```bash
-cd src/tests.testRunner.py
+cd tests/testRunner.py
 ```
 
-3. Pick a test method from src/tests/testGenerator.py and run it inside src/tests/testRunner.py.
+3. Pick a test method from tests/testGenerator.py and run it inside src/tests/testRunner.py.
 
 4. Run the following command in the console:
 
