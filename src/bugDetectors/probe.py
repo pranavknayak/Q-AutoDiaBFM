@@ -1,7 +1,6 @@
-#The code imports threadingStyle enum from bugInvestigator module along with necessary modules such as importlib, os, and pathlib. 
-#The assessBugClass function takes bugFolder, codeSample, and style as input parameters and iterates through bug directories to import the probe module. 
-#If the bug is detected, the code assesses its type and returns a prune flag and bugTypeMessage.
-
+#This code imports four modules and defines a function named "assessBugClass" that takes three arguments and returns a tuple of two values. 
+#The function searches for a bug in subdirectories of a given folder and assesses the type of bug if found by importing and executing 
+#a module named "probe".
 
 from bugInvestigator import threadingStyle
 import importlib
