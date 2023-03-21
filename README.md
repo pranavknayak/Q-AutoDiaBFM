@@ -6,6 +6,8 @@
 - ```IncorrectInit```
 - ```IncorrectMeasurement```
 
+Examples demonstrations have been provided under the tests folder.
+
 # Instructions to run the source code:
 
 1. Clone this repository:
