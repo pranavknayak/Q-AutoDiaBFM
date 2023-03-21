@@ -3,16 +3,25 @@ Automatic Diagnosis of Quantum Software Bug Fix Motifs
 
 Instructions to run the source code:
 
-1. ```bash
+1. Clone this repository:
+
+```bash
 git clone https://github.com/KrishnKher/Q-AutoDiaBFM.
 ```
-- ```bash
+
+2. Navigate to the main.py file:
+
+```bash
 cd src/main.py
 ```
 
-- ```Pass in two strings of code, one being the buggy and the other, the patched one to the bugInvestigator.classifyBugs method.```
-- ```Run "python main.py" in the console.```
-- ```Observe the output in the console.```
+3. ```Pass in two strings of code, one being the buggy and the other, the patched one to the bugInvestigator.classifyBugs method.```
+
+4. Run the following command in the console:
+
+```bash
+python main.py.
+```
   
  Instructions to run the tests:
   - ```git clone https://github.com/KrishnKher/Q-AutoDiaBFM.```
