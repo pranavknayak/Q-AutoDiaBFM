@@ -58,26 +58,6 @@ def inbuiltGateError(codeSample):
     
     return False
 
-    # if len(codeSample[1]):
-    #     diffList = str(codeSample[1]).split('\n')
-    #     for change in range(len(diffList)):
-    #         temporaryStatus = re.search(regexPattern, diffList[change])
-    #         if temporaryStatus is not None:
-    #             buggyGate = diffList[change].split("((identifier:")[1].split(",")[0]
-    #             patchedGate = diffList[change].split("), ")[1].split(")")[0]
-    #             if (buggyGate in buggyID) and (patchedGate in patchedID):
-    #                 continue
-    #             if buggyGate in availableInbuiltGates and patchedGate in availableInbuiltGates:
-    #                 if buggyGate != patchedGate:
-    #                     return True
-    #             else:
-    #                 return True
-    # else:
-    #     return False
-
-    # return False
-
-
 def detectIncorrectGate(codeSample):
     status = False
     bugTypeMessage = "Incorrect usage of gate(s)."
