@@ -3,8 +3,7 @@ Automatic Diagnosis of Quantum Software Bug Fix Motifs
 
 Instructions to run the source code:
 
-- 
-```bash
+1. ```bash
 git clone https://github.com/KrishnKher/Q-AutoDiaBFM.
 ```
 - ```bash
