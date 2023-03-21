@@ -2,7 +2,6 @@
 #The function searches for a bug in subdirectories of a given folder and assesses the type of bug if found by importing and executing 
 #a module named "probe".
 
-
 from bugInvestigator import threadingStyle
 import importlib
 import os
