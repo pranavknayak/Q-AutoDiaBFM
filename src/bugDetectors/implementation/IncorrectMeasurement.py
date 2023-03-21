@@ -142,9 +142,6 @@ def measurementRegisterError(codeSample):
     
     buggyLineNum = list(buggyLine.values())
     patchedLineNum = list(patchedLine.values())
-
-    # print(buggy, patched, sep = "\n***\n")
-    # print(buggyLineNum, patchedLineNum)
     
     for num in range(len(buggyLineNum)):
         if buggyLineNum[num] != patchedLineNum[num]:
