@@ -7,10 +7,14 @@ import re
 
 def inbuiltGateError(codeSample):
     availableInbuiltGates = ['ccx', 'cx', 'h', 'i', 'p', 's', 'sdg', 't', 'tdg', 'u', 'x', 'y', 'z']
-    regexPattern = " *Update\(\(identifier:.+, *line [0-9]+:[0-9] - [0-9]+:[0-9]\), .+\) *"
+    regexPattern = ".+\..*"
 
     buggy, patched = codeSample[0], codeSample[2]
     buggyID, patchedID = {}, {}
+    buggyList = list(filter(("").__ne__, buggy.split("\n")))
+    patchedList = list(filter(("").__ne__, patched.split("\n")))
+    buggyLine, patchedLine = {}, {}
+    buggyGate, patchedGate = [], []
     astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
     
     for node in astBuggy:
@@ -30,25 +34,48 @@ def inbuiltGateError(codeSample):
 
     if len(buggyID) != len(patchedID):
         return False
-
-    if len(codeSample[1]):
-        diffList = str(codeSample[1]).split('\n')
-        for change in range(len(diffList)):
-            temporaryStatus = re.search(regexPattern, diffList[change])
-            if temporaryStatus is not None:
-                buggyGate = diffList[change].split("((identifier:")[1].split(",")[0]
-                patchedGate = diffList[change].split("), ")[1].split(")")[0]
-                if (buggyGate in buggyID) and (patchedGate in patchedID):
-                    continue
-                if buggyGate in availableInbuiltGates and patchedGate in availableInbuiltGates:
-                    if buggyGate != patchedGate:
-                        return True
-                else:
-                    return True
-    else:
+    
+    for line in buggyList:
+        temporaryStatus = re.search(regexPattern, line)
+        if temporaryStatus is not None:
+            gate = line.split(".")[1].split("(")[0]
+            if gate in availableInbuiltGates:
+                buggyGate.append(gate)
+    
+    for line in patchedList:
+        temporaryStatus = re.search(regexPattern, line)
+        if temporaryStatus is not None:
+            gate = line.split(".")[1].split("(")[0]
+            if gate in availableInbuiltGates:
+                patchedGate.append(gate)
+    
+    if len(buggyGate) != len(patchedGate):
         return False
 
+    for index in range(len(buggyGate)):
+        if buggyGate[index] != patchedGate[index]:
+            return True
+    
     return False
+
+    # if len(codeSample[1]):
+    #     diffList = str(codeSample[1]).split('\n')
+    #     for change in range(len(diffList)):
+    #         temporaryStatus = re.search(regexPattern, diffList[change])
+    #         if temporaryStatus is not None:
+    #             buggyGate = diffList[change].split("((identifier:")[1].split(",")[0]
+    #             patchedGate = diffList[change].split("), ")[1].split(")")[0]
+    #             if (buggyGate in buggyID) and (patchedGate in patchedID):
+    #                 continue
+    #             if buggyGate in availableInbuiltGates and patchedGate in availableInbuiltGates:
+    #                 if buggyGate != patchedGate:
+    #                     return True
+    #             else:
+    #                 return True
+    # else:
+    #     return False
+
+    # return False
 
 
 def detectIncorrectGate(codeSample):

@@ -51,10 +51,6 @@ def returnArgs(args):
     
     return np.array(paren)
 
-def measurementTimingError(codeSamole):
-
-    return False
-
 def measurementRegisterError(codeSample):
     availableMeasurementFunctions = ['measure', 'measure_all', 'measure_inactive']
     regexPattern = ".+\.measure.*"
@@ -69,8 +65,6 @@ def measurementRegisterError(codeSample):
     buggyArgs, patchedArgs = [], []
     astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
     
-    check1 = 0
-
     for node in astBuggy:
         if isinstance(node, ast.Assign):
             for id in getattr(node, 'targets'):
@@ -114,36 +108,49 @@ def measurementRegisterError(codeSample):
     if len(buggyMeasure) != len(patchedMeasure):
         return True
     
-    for buggyKey in buggyMeasure.keys():
-        for patchedKey in patchedMeasure.keys():
-            if buggyMeasure[buggyKey] != patchedMeasure[patchedKey]:
-                return True
+    buggyKeys, patchedKeys = list(buggyMeasure.keys()), list(patchedMeasure.keys())
+
+    for i in range(len(buggyKeys)):
+        if buggyMeasure[buggyKeys[i]] != patchedMeasure[patchedKeys[i]]:
+            return True
     
     for line in range(len(buggyList)):
         tempStatus = re.search(regexPattern, buggyList[line])
         if tempStatus is not None:
             buggyLine[buggyList[line].split("measure")[1]] = line
-
+    
+    for line in range(len(patchedList)):
+        tempStatus = re.search(regexPattern, patchedList[line])
+        if tempStatus is not None:
+            patchedLine[patchedList[line].split("measure")[1]] = line
 
     for buggyKey in buggyLine.keys():
-        buggyArgs = returnArgs(buggyKey)
-
-    if len(codeSample[1]) == 1:
-        editScriptStringed = str(codeSample[1])[2:-2]
-        temporaryStatus = re.search(regexPattern, editScriptStringed)
-        if temporaryStatus is not None:
-            buggyFunctionIdentifier = editScriptStringed.split()
-            patchedFunctionIdentifier = editScriptStringed.split()
-            if (buggyFunctionIdentifier not in availableMeasurementFunctions) or (patchedFunctionIdentifier not in availableMeasurementFunctions):
-                return False
-            # either it is something like measure vs. measure_all
-            # or there are incorrect arguments to the measure* function
-    else:
+        buggyArgs.append(returnArgs(buggyKey))
+    
+    for patchedKey in patchedLine.keys():
+        patchedArgs.append(returnArgs(patchedKey))
+    
+    if len(buggyArgs) != len(patchedArgs):
         return False
-            
-    return True
 
+    for i in range(len(buggyArgs)):
+        if buggyArgs[i].shape != patchedArgs[i].shape:
+            return True
+        else:
+            if np.array_equal(buggyArgs[i], patchedArgs[i]) == 0:
+                return True
+    
+    buggyLineNum = list(buggyLine.values())
+    patchedLineNum = list(patchedLine.values())
 
+    # print(buggy, patched, sep = "\n***\n")
+    # print(buggyLineNum, patchedLineNum)
+    
+    for num in range(len(buggyLineNum)):
+        if buggyLineNum[num] != patchedLineNum[num]:
+            return True
+    
+    return False
 
 def detectIncorrectMeasurement(codeSample):
     status = False
