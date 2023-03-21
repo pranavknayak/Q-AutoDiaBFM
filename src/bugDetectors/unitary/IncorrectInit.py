@@ -3,8 +3,9 @@
 # provided the identifier is the same, check if the other files' gate matches with an inbuilt gate.
 # incase it is a custom made gate, think
 import ast
-import re
 import numpy as np
+import re
+
 
 def returnArgs(args):
     args = "".join(args.split(" "))
@@ -135,6 +136,4 @@ def detectIncorrectInit(codeDiff):
     #print(editScript[1])
     status = checkIncorrectParam(codeDiff)
     
-
-
     return status, bugTypeMessage

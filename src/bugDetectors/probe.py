@@ -1,12 +1,12 @@
-#This code imports four modules and defines a function named "assessBugClass" that takes three arguments and returns a tuple of two values. 
-#The function searches for a bug in subdirectories of a given folder and assesses the type of bug if found by importing and executing 
-#a module named "probe".
+''' This code imports four modules and defines a function named "assessBugClass" that takes three arguments and returns a tuple of two values. 
+The function searches for a bug in subdirectories of a given folder and assesses the type of bug if found by importing and executing 
+a module named "probe".
+'''
 
 from bugInvestigator import threadingStyle
 import importlib
 import os
 from pathlib import Path
-import threading
 
 bugPruningFileName = "probe"
 

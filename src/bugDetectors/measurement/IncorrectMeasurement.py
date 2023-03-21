@@ -3,11 +3,8 @@
 # provided the identifier is the same, check if the other files' gate matches with an inbuilt gate.
 # incase it is a custom made gate, think
 import ast
-import re
 import numpy as np
-from code_diff.diff_utils import parse_hunks
-from code_diff import SStubPattern
-import code_diff as cd
+import re
 
 def returnArgs(args):
     args = "".join(args.split(" "))
@@ -153,11 +150,5 @@ def detectIncorrectMeasurement(codeSample):
     status = False
     bugTypeMessage = "Measurement(s) performed incorrectly."
     status = measurementRegisterError(codeSample)
-
-    # again done only with a quantum circuit object.
-    # 1. If the arguments are not matching then something is off.
-    # 2. Or if it is measured in the wrong place in the code. Not hhandling right now?
-
-
 
     return status, bugTypeMessage
