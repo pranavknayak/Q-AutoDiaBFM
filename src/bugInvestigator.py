@@ -1,3 +1,7 @@
+#This code imports essential modules like ast, code_diff, importlib, os, sys, and Enum, and defines threadingStyle enum.
+#It then defines findProbeFile and probeBugs functions to output a bugTypeMessage based on buggy and patched code samples and 
+#uses processFiles and probeBugs functions to classify the bugs in the given code samples.
+
 import ast
 import code_diff
 import importlib
