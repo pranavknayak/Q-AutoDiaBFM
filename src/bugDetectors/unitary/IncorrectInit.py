@@ -1,7 +1,3 @@
-# compare the diff lines
-# note that there are only a finite number of inbuilt gates in qiskit
-# provided the identifier is the same, check if the other files' gate matches with an inbuilt gate.
-# incase it is a custom made gate, think
 import ast
 import numpy as np
 import re
@@ -58,10 +54,8 @@ def checkIncorrectParam(codeSample):
     buggyID, patchedID = {}, {}
     buggyList = list(filter(("").__ne__, buggy.split("\n")))
     patchedList = list(filter(("").__ne__, patched.split("\n")))
-    buggyLine, patchedLine = {}, {}
     buggyGate, patchedGate = {}, {}
     buggyQuantum, patchedQuantum = {}, {}
-    buggyArgs, patchedArgs = [], []
     astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
 
     for node in astBuggy:
@@ -133,7 +127,6 @@ def checkIncorrectParam(codeSample):
 def detectIncorrectInit(codeDiff):
     status = False
     bugTypeMessage = "Incorrect initialization(s) attempted."
-    #print(editScript[1])
     status = checkIncorrectParam(codeDiff)
     
     return status, bugTypeMessage

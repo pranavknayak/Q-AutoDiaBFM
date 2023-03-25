@@ -5,7 +5,7 @@ def inbuiltGateError(codeSample):
     availableInbuiltGates = ['ccx', 'cx', 'h', 'i', 'p', 's', 'sdg', 't', 'tdg', 'u', 'x', 'y', 'z']
     regexPattern = ".+\..*"
 
-    buggy, patched = codeSample[0], codeSample[2]
+    buggy, patched = codeSample[0], codeSample[1]
     buggyID, patchedID = {}, {}
     buggyList = list(filter(("").__ne__, buggy.split("\n")))
     patchedList = list(filter(("").__ne__, patched.split("\n")))

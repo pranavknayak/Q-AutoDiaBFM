@@ -1,7 +1,3 @@
-# compare the diff lines
-# note that there are only a finite number of inbuilt gates in qiskit
-# provided the identifier is the same, check if the other files' gate matches with an inbuilt gate.
-# incase it is a custom made gate, think
 import ast
 import numpy as np
 import re
@@ -49,19 +45,17 @@ def returnArgs(args):
     return np.array(paren)
 
 def measurementRegisterError(codeSample):
-    availableMeasurementFunctions = ['measure', 'measure_all', 'measure_inactive']
-    regexPattern = ".+\.measure.*"
-    # " *Update\(\(identifier:.+, *line [0-9]+:[0-9] - [0-9]+:[0-9]\), .+\) * "
-
     buggy, patched = codeSample[0], codeSample[2]
+    astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
+    availableMeasurementFunctions = ['measure', 'measure_all', 'measure_inactive']
     buggyID, patchedID = {}, {}
     buggyMeasure, patchedMeasure = {}, {}
     buggyList = list(filter(("").__ne__, buggy.split("\n")))
     patchedList = list(filter(("").__ne__, patched.split("\n")))
     buggyLine, patchedLine = {}, {}
     buggyArgs, patchedArgs = [], []
-    astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
-    
+    regexPattern = ".+\.measure.*"
+
     for node in astBuggy:
         if isinstance(node, ast.Assign):
             for id in getattr(node, 'targets'):

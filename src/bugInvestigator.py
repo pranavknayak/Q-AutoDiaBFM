@@ -4,7 +4,6 @@ uses processFiles and probeBugs functions to classify the bugs in the given code
 '''
 
 import ast
-import code_diff
 import importlib
 import os
 import sys
@@ -29,11 +28,10 @@ def findProbeFile():
         return
 
 def probeBugs(buggy, patched):
-    codeDifference = code_diff.difference(buggy, patched, lang='python')
     findProbeFile()
     prober = importlib.import_module(bugDataRootDirectoryName + "." + bugPruningFileName,
                                       bugPruningFilePath)
-    codeSample = (buggy, codeDifference.edit_script(), patched)
+    codeSample = (buggy, patched)
     status, bugTypeMessage = prober.assessBugClass(bugDataRootDirectoryName, codeSample,
                                                   threadingStyle.nil.value)
     if status == False: # Or that there is a bug category which we are unable to identify (captured by msg below already)
@@ -62,4 +60,4 @@ def processFiles(buggy = None, patched = None, commandLine = True): # The buggy 
 
 def classifyBugs(buggy = None, patched = None, commandLine = True):
     buggy, patched = processFiles(buggy, patched, commandLine)
-    return probeBugs(buggy, patched) # Mention line numbers, etc.?
+    return probeBugs(buggy, patched)
