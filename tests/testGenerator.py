@@ -9,6 +9,7 @@ import bugInvestigator as bI
 bugDatasetRootDirectoryName = "bugDataset"
 bugDatasetRootDirectoryPath = "../Q-AutoDiaBFM/tests/bugDataset"
 
+''' Runs all tests for all bug detection modules.'''
 def runTests(bugTestFiles, bugDatasetDirectoryName,
              bugDatasetDirectoryPath, characteristicBugMessage):
     allTestsPassed = False
@@ -37,8 +38,8 @@ def runTests(bugTestFiles, bugDatasetDirectoryName,
             print("(Wrong) error message:", bugTypeMessage, "\n")
     return allTestsPassed
 
-
-def dynamicTestHandler(numberOfTests: int, testAttribute: str): # To be tested.
+''' TBT (TO BE TESTED!!).'''
+def dynamicTestHandler(numberOfTests: int, testAttribute: str):
     testAttributeFunction = getattr(__name__, "test" + testAttribute)
     return testAttributeFunction(numberOfTests)
 

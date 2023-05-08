@@ -11,7 +11,9 @@ def inbuiltGateError(codeSample):
     patchedList = list(filter(("").__ne__, patched.split("\n")))
     buggyGate, patchedGate = [], []
     astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
-    
+
+
+    ''' Retrieves all instances of a QuantumCircuit object in both, the buggy and patched codes.'''
     for node in astBuggy:
         if isinstance(node, ast.Assign):
             for id in getattr(node, 'targets'):
@@ -26,10 +28,10 @@ def inbuiltGateError(codeSample):
     
     ''' Considering the cases when there is a one to one mapping of the QuantumCircuits 
     in buggy code to the QuantumCircuits in patched code. '''
-
     if len(buggyID) != len(patchedID):
         return False
     
+    ''' Checks if the gate is amongst the available gates in Qiskit.'''
     for line in buggyList:
         temporaryStatus = re.search(regexPattern, line)
         if temporaryStatus is not None:
@@ -46,9 +48,11 @@ def inbuiltGateError(codeSample):
             if iden in patchedID and gate in availableInbuiltGates:
                 patchedGate.append(gate)
     
+    ''' Checks if the number of gates used in both codes are the same.'''
     if len(buggyGate) != len(patchedGate):
         return False
 
+    ''' Checks if any of the gates used are differenet, line by line in both the codes.'''
     for index in range(len(buggyGate)):
         if buggyGate[index] != patchedGate[index]:
             return True

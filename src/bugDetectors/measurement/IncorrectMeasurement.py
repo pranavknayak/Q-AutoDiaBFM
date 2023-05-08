@@ -45,7 +45,7 @@ def returnArgs(args):
     return np.array(paren)
 
 def measurementRegisterError(codeSample):
-    buggy, patched = codeSample[0], codeSample[2]
+    buggy, patched = codeSample[0], codeSample[1]
     astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
     availableMeasurementFunctions = ['measure', 'measure_all', 'measure_inactive']
     buggyID, patchedID = {}, {}
@@ -62,8 +62,7 @@ def measurementRegisterError(codeSample):
                 if id.id not in buggyID and getattr(node, 'value').func.id == "QuantumCircuit":
                     buggyID[id.id] = []
         
-        #Check if any of the measure function is present in the code
-        #Using AST to perform this check
+        ''' Check if any of the measure functions are present in the code. Uses AST to perform this check.'''
         if isinstance(node, ast.Expr):
             if getattr(node, "value").func.attr in availableMeasurementFunctions:
                 if getattr(node, "value").func.value.id not in buggyMeasure:
@@ -94,15 +93,15 @@ def measurementRegisterError(codeSample):
     if len(buggyID) != len(patchedID):
         return False
     
-    #Considering only one quantum circuit, will fail otherwise
-    #The below semantic check verifies if the same mesurement function is being used 
+    ''' Considering only one quantum circuit, will fail otherwise.'''
+    ''' The below semantic check verifies if the same mesurement function is being used.'''
     if len(buggyMeasure) != len(patchedMeasure):
         return True
     
     buggyKeys, patchedKeys = list(buggyMeasure.keys()), list(patchedMeasure.keys())
 
-    for i in range(len(buggyKeys)):
-        if buggyMeasure[buggyKeys[i]] != patchedMeasure[patchedKeys[i]]:
+    for index in range(len(buggyKeys)):
+        if buggyMeasure[buggyKeys[index]] != patchedMeasure[patchedKeys[index]]:
             return True
     
     for line in range(len(buggyList)):

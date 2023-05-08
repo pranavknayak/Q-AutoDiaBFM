@@ -10,6 +10,7 @@ from pathlib import Path
 
 bugPruningFileName = "probe"
 
+''' Assess which bug-fix class does the bug-fix pattern belong to, at this level of the tree.'''
 def assessBugClass(bugFolder: str, codeSample, style: threadingStyle):
     prune = False
     _bugPackage_ = ""
@@ -17,15 +18,20 @@ def assessBugClass(bugFolder: str, codeSample, style: threadingStyle):
     bugDirectoryHandle = Path(__file__).parent.resolve()
     bugDirectories = [bugDirectory for bugDirectory in bugDirectoryHandle.iterdir() if bugDirectory.is_dir()]
 
-    for bugDirectory in bugDirectories: # To be threaded as appropriate
+    ''' Iterates through all available bug-fix classes at the current level.'''
+    for bugDirectory in bugDirectories: 
         bugPackage = os.path.basename(bugDirectory)
         if bugPackage == "__pycache__": continue
         prober = importlib.import_module(bugFolder + "." + bugPackage + "." + bugPruningFileName, 
                                          "../" + bugPackage + "/" + bugPruningFileName + ".py")
-        if prober.assessBugClass(codeSample) == True:
+        ''' Finds an appropriate bug-fix class.'''
+        if prober.assessBugClass(codeSample) == True: 
             _bugPackage_ = bugPackage
             prune = True
-            # break
+        ''' Since the current level identifies as the parent of the children of the tree,
+            it iterates over the modules here to find the precise bug-fix detection motif. 
+            Else it would recursively go to the next level of bug-fix classes.
+        '''
         if prune == True:
             prober = importlib.import_module(bugFolder + "." + _bugPackage_ + "." + bugPruningFileName, 
                                         "../" + _bugPackage_ + "/" + bugPruningFileName + ".py")

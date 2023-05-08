@@ -16,7 +16,7 @@ It is not clear what this function is used for as it does not perform any operat
 
 def assessBugClass(codeSample):
     prune = True
-    # Add in the pakad here
+    ''' Add in the short signature code here.'''
     return prune
 
 
@@ -33,7 +33,7 @@ def assessBugType(bugFolder: str, codeSample, style: threadingStyle):
     bugDirectoryHandle = Path(__file__).parent.glob('**/*.py')
     bugFiles = [os.path.basename(bugFile) for bugFile in bugDirectoryHandle]
 
-    for bugFile in bugFiles: # Thread it as appropriate
+    for bugFile in bugFiles:
         if bugFile == '__init__.py' or bugFile == 'probe.py': continue
         prober = importlib.import_module(bugFolder + "." + bugFile[:-3], 
                                          "../" + bugFolder + "/" + bugFile)
