@@ -1,4 +1,4 @@
-''' Run tests from this module.'''
+""" Run tests from this module."""
 import testGenerator as tG
 
-tG.testIncorrectMeasurement()
+tG.runAllTests()
