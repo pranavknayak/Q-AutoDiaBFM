@@ -13,11 +13,16 @@ def returnArgs(args):
     paren = []
     value = ""
     parenCheck = 0
+    subparencheck = 0
     squareCheck = 0
 
     for char in args:
         if char == "(":
-            parenCheck = 1
+            if parenCheck == 1:
+                subparencheck = 1
+                value += char
+            else:
+                parenCheck = 1
         elif char == "[":
             squareCheck = 1
         elif char == "]":
@@ -27,13 +32,19 @@ def returnArgs(args):
             square = []
             value = ""
         elif char == ")":
-            parenCheck = 0
-            if len(value) > 0:
-                paren.append(value)
+            if subparencheck == 1:
+                subparencheck = 0
+                value += char
+            else:
+                parenCheck = 0
+                if len(value) > 0:
+                    paren.append(value)
         elif char == ",":
             if parenCheck and value != "":
                 if squareCheck:
                     square.append(value)
+                elif subparencheck:
+                    subparen += (value,)
                 else:
                     paren.append(value)
             value = ""
@@ -96,12 +107,12 @@ def checkIncorrectParam(codeSample):
                 ):
                     patchedID[id.id] = []
 
-    """ Considering the cases when there is a one to one mapping of the QuantumCircuits 
+    """ Considering the cases when there is a one to one mapping of the QuantumCircuits
     in buggy code to the QuantumCircuits in patched code. """
     if len(buggyID) != len(patchedID):
         return False
 
-    """ Deduces if the arguments are amongst the possible arguments for an inbuilt 
+    """ Deduces if the arguments are amongst the possible arguments for an inbuilt
         gate operation in Qiskit, in both codes.
     """
     for line in buggyList:
