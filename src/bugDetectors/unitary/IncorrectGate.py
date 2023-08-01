@@ -79,10 +79,48 @@ def inbuiltGateError(codeSample):
 
     return False
 
+def customGateError(codeSample):
+    buggy, patched = codeSample[0], codeSample[1]
+    buggyList = list(filter(("").__ne__, buggy.split("\n")))
+    patchedList = list(filter(("").__ne__, patched.split("\n")))
+    astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
+    buggyGateIDs = []
+    buggyCustomIDs = []
+
+    patchedGateIDs = []
+    patchedCustomIDs = []
+    for node in astBuggy:
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            for target in getattr(node, 'targets'):
+                if (target.id not in buggyGateIDs 
+                        and isinstance(node.value.func, ast.Name) 
+                        and node.value.func.id == 'Gate'):
+                    buggyGateIDs[target.id] = []
+
+                elif (target.id not in buggyCustomIDs
+                        and isinstance(node.value.func, ast.Attribute)
+                        and node.value.func.attr == 'to_instruction'):
+                    buggyCustomIDs[target.id] = []
+
+    for node in astPatched:
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            for target in getattr(node, 'targets'):
+                if (target.id not in patchedGateIDs 
+                        and isinstance(node.value.func, ast.Name) 
+                        and node.value.func.id == 'Gate'):
+                    patchedGateIDs[target.id] = []
+
+                elif (target.id not in patchedCustomIDs
+                        and isinstance(node.value.func, ast.Attribute)
+                        and node.value.func.attr == 'to_instruction'):
+                    patchedCustomIDs[target.id] = []
+
+
+
 
 def detectIncorrectGate(codeSample):
     status = False
     bugTypeMessage = "Incorrect usage of gate(s)."
-    status |= inbuiltGateError(codeSample)
+    status |= inbuiltGateError(codeSample) | customGateError(codeSample)
 
     return status, bugTypeMessage
