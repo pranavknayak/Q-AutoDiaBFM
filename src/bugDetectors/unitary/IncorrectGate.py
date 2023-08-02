@@ -91,7 +91,7 @@ def customGateError(codeSample):
     patchedCustomIDs = {}
     for node in astBuggy:
         if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
-            for target in getattr(node, 'targets'):
+            for target in node.targets:
                 if (target.id not in buggyGateIDs 
                         and isinstance(node.value.func, ast.Name) 
                         and node.value.func.id == 'Gate'):
@@ -105,23 +105,38 @@ def customGateError(codeSample):
                             buggyGateIDs[target.id] = []
                             break
 
-                elif (target.id not in buggyCustomIDs
+                if (target.id not in buggyCustomIDs
                         and isinstance(node.value.func, ast.Attribute)
                         and node.value.func.attr == 'to_instruction'):
                     buggyCustomIDs[target.id] = []
 
+                
+
+
     for node in astPatched:
         if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
-            for target in getattr(node, 'targets'):
+            for target in node.targets:
                 if (target.id not in patchedGateIDs 
                         and isinstance(node.value.func, ast.Name) 
                         and node.value.func.id == 'Gate'):
-                    patchedGateIDs[target.id] = []
+                    gate = node.value
+                    for argument in gate.args:
+                        if isinstance(argument, ast.Constant) and argument.value > 2:
+                            patchedGateIDs[target.id] = []
+                            break
+                    for kwargument in gate.keywords:
+                        if kwargument.arg == 'num_qubits' and kwargument.value.value > 2:
+                            patchedGateIDs[target.id] = []
+                            break
 
-                elif (target.id not in patchedCustomIDs
+                if (target.id not in patchedCustomIDs
                         and isinstance(node.value.func, ast.Attribute)
                         and node.value.func.attr == 'to_instruction'):
                     patchedCustomIDs[target.id] = []
+    print(buggyGateIDs)
+    print(buggyCustomIDs)
+    print(patchedGateIDs)
+    print(patchedCustomIDs)
 
     return False
 
