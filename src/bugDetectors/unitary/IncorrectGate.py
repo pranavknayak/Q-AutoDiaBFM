@@ -89,13 +89,22 @@ def customGateError(codeSample):
 
     patchedGateIDs = []
     patchedCustomIDs = []
+    #TODO: only add Gates whose args has a constant node, val > 2, or whose keyword args has keyword 'num_qubits', value is a constant of value > 3
     for node in astBuggy:
         if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
             for target in getattr(node, 'targets'):
                 if (target.id not in buggyGateIDs 
                         and isinstance(node.value.func, ast.Name) 
                         and node.value.func.id == 'Gate'):
-                    buggyGateIDs[target.id] = []
+                    gate = node.value
+                    for argument in gate.args:
+                        if isinstance(argument, ast.Constant) and argument.value > 2:
+                            buggyGateIDs[target.id] = []
+                            break
+                    for kwargument in gate.keywords:
+                        if kwargument.arg == 'num_qubits' and kwargument.value.value > 2:
+                            buggyGateIDs[target.id] = []
+                            break
 
                 elif (target.id not in buggyCustomIDs
                         and isinstance(node.value.func, ast.Attribute)
@@ -114,6 +123,8 @@ def customGateError(codeSample):
                         and isinstance(node.value.func, ast.Attribute)
                         and node.value.func.attr == 'to_instruction'):
                     patchedCustomIDs[target.id] = []
+
+    return False
 
 
 
