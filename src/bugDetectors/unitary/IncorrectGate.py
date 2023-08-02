@@ -84,12 +84,11 @@ def customGateError(codeSample):
     buggyList = list(filter(("").__ne__, buggy.split("\n")))
     patchedList = list(filter(("").__ne__, patched.split("\n")))
     astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
-    buggyGateIDs = []
-    buggyCustomIDs = []
+    buggyGateIDs = {}
+    buggyCustomIDs = {}
 
-    patchedGateIDs = []
-    patchedCustomIDs = []
-    #TODO: only add Gates whose args has a constant node, val > 2, or whose keyword args has keyword 'num_qubits', value is a constant of value > 3
+    patchedGateIDs = {}
+    patchedCustomIDs = {}
     for node in astBuggy:
         if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
             for target in getattr(node, 'targets'):
