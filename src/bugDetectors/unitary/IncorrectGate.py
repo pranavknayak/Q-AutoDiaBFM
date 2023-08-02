@@ -87,8 +87,6 @@ def customGateError(codeSample):
     buggyGateIDs = {}
     buggyCustomIDs = {}
 
-    patchedGateIDs = {}
-    patchedCustomIDs = {}
     for node in astBuggy:
         if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
             for target in node.targets:
@@ -113,6 +111,8 @@ def customGateError(codeSample):
                 
 
 
+    patchedGateIDs = {}
+    patchedCustomIDs = {}
     for node in astPatched:
         if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
             for target in node.targets:
@@ -133,10 +133,16 @@ def customGateError(codeSample):
                         and isinstance(node.value.func, ast.Attribute)
                         and node.value.func.attr == 'to_instruction'):
                     patchedCustomIDs[target.id] = []
-    print(buggyGateIDs)
-    print(buggyCustomIDs)
-    print(patchedGateIDs)
-    print(patchedCustomIDs)
+
+    buggyGateCount, buggyCustomCount = len(buggyGateIDs), len(buggyCustomIDs)
+    patchedGateCount, patchedCustomCount = len(patchedGateIDs), len(patchedCustomIDs)
+
+    if buggyGateCount == 0:
+        return False
+    if buggyGateCount > patchedGateCount:
+        if buggyGateCount + buggyCustomCount == patchedGateCount + patchedCustomCount:
+            return True
+        return False
 
     return False
 
