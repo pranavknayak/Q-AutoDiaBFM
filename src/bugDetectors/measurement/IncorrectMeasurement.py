@@ -2,6 +2,15 @@ import ast
 import numpy as np
 import re
 
+#TODO: Extract number of iterations from a for loop node
+def extractIters(node: ast.For):
+    target = ast.Name(node.target)
+    target_id = target.id
+    if isinstance(node.iter, ast.Call):
+        return  ast.Constant(node.iter.args[0]).value
+    elif isinstance(node.iter, ast.List):
+        return len(node.iter.elts)
+
 
 def returnArgs(args):
     args = "".join(args.split(" "))
@@ -32,8 +41,8 @@ def returnArgs(args):
                     square.append(value)
                 else:
                     paren.append(value)
-            value = ""
         else:
+            value = ""
             value += char
 
     for args in range(len(paren)):
@@ -163,7 +172,34 @@ def measurementRegisterError(codeSample):
 
 #TODO: Implement repeatedMeasurementError
 def repeatedMeasurementError(codeSample):
-    pass
+    availableMeasurementFunctions = ["measure", "measure_all", "measure_inactive"]
+    regexPattern = ".+\.measure.*"
+
+    buggy, patched = codeSample[0], codeSample[1]
+    buggyID, patchedID = {}, {}
+    buggyMeasure, patchedMeasure = {}, {}
+    buggyList = list(filter(("").__ne__, buggy.split("\n")))
+    patchedList = list(filter(("").__ne__, patched.split("\n")))
+    buggyLine, patchedLine = {}, {}
+    buggyArgs, patchedArgs = [], []
+    astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
+
+    for node in astBuggy:
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            for target in node.targets:
+                if (target.id not in buggyID
+                        and isinstance(node.value.func, ast.Name)
+                        and node.value.func.id == 'QuantumCircuit'):
+                    buggyID[target.id] = []
+
+            
+    for node in astpatched:
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+            for target in node.targets:
+                if (target.id not in patchedID
+                        and isinstance(node.value.func, ast.Name)
+                        and node.value.func.id == 'QuantumCircuit'):
+                    patchedID[target.id] = []
 
 def detectIncorrectMeasurement(codeSample):
     status = False
