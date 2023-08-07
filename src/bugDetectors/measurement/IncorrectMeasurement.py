@@ -161,6 +161,9 @@ def measurementRegisterError(codeSample):
 
     return False
 
+#TODO: Implement repeatedMeasurementError
+def repeatedMeasurementError(codeSample):
+    pass
 
 def detectIncorrectMeasurement(codeSample):
     status = False
