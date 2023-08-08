@@ -82,8 +82,8 @@ def measurementRegisterError(codeSample):
             if getattr(node, "value").func.attr in availableMeasurementFunctions:
                 if getattr(node, "value").func.value.id not in buggyMeasure:
                     buggyMeasure[getattr(node, "value").func.value.id] = []
+                    getattr(node, "value").func.attr
                     buggyMeasure[getattr(node, "value").func.value.id].append(
-                        getattr(node, "value").func.attr
                     )
                 else:
                     buggyMeasure[getattr(node, "value").func.value.id].append(
@@ -170,7 +170,6 @@ def measurementRegisterError(codeSample):
 
     return False
 
-#TODO: Implement repeatedMeasurementError
 def repeatedMeasurementError(codeSample):
     availableMeasurementFunctions = ["measure", "measure_all", "measure_inactive"]
     regexPattern = ".+\.measure.*"
@@ -190,7 +189,7 @@ def repeatedMeasurementError(codeSample):
                 if (target.id not in buggyID
                         and isinstance(node.value.func, ast.Name)
                         and node.value.func.id == 'QuantumCircuit'):
-                    buggyID[target.id] = []
+                    buggyID[target.id] = 0
 
             
     for node in astpatched:
@@ -199,7 +198,52 @@ def repeatedMeasurementError(codeSample):
                 if (target.id not in patchedID
                         and isinstance(node.value.func, ast.Name)
                         and node.value.func.id == 'QuantumCircuit'):
-                    patchedID[target.id] = []
+                    patchedID[target.id] = 0
+
+    astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
+
+    for node in astBuggy:
+        if isinstance(node, ast.For):
+            iterations = extractIters(node)
+            if not iterations:
+                continue
+            else:
+                for subnode in node.body:
+                    if isinstance(subnode, ast.Expr) and isinstance(subnode.value, ast.Call):
+                        id = subnode.value.func.value.id
+                        func = subnode.value.func.attr
+                        if id in buggyID.keys() and func in availableMeasurementFunctions:
+                            buggyID[id] += iterations - 1
+        else:
+            if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call):
+                id = node.value.func.value.id
+                func = node.value.func.attr
+                if id in buggyID.keys() and func in availableMeasurementFunctions:
+                    buggyID[id] += 1
+
+
+    for node in astPatched:
+        if isinstance(node, ast.For):
+            iterations = extractIters(node)
+            if not iterations:
+                continue
+            else:
+                for subnode in node.body:
+                    if isinstance(subnode, ast.Expr) and isinstance(subnode.value, ast.Call):
+                        id = subnode.value.func.value.id
+                        func = subnode.value.func.attr
+                        if id in patchedID.keys() and func in availableMeasurementFunctions:
+                            patchedID[id] += iterations - 1
+        else:
+            if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call):
+                id = node.value.func.value.id
+                func = node.value.func.attr
+                if id in patchedID.keys() and func in availableMeasurementFunctions:
+                    patchedID[id] += 1
+
+
+
+
 
 def detectIncorrectMeasurement(codeSample):
     status = False
