@@ -255,6 +255,6 @@ def repeatedMeasurementError(codeSample):
 def detectIncorrectMeasurement(codeSample):
     status = False
     bugTypeMessage = "Measurement(s) performed incorrectly."
-    status = measurementRegisterError(codeSample)
+    status = measurementRegisterError(codeSample) | repeatedMeasurementError(codeSample)
 
     return status, bugTypeMessage
