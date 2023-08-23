@@ -137,12 +137,11 @@ def customGateError(codeSample):
     buggyGateCount, buggyCustomCount = len(buggyGateIDs), len(buggyCustomIDs)
     patchedGateCount, patchedCustomCount = len(patchedGateIDs), len(patchedCustomIDs)
 
-    if buggyGateCount == 0:
-        return False
     if buggyGateCount > patchedGateCount:
-        if buggyGateCount + buggyCustomCount == patchedGateCount + patchedCustomCount:
+        opaqueGateReduction = buggyGateCount - patchedGateCount
+        compositeGateIncrease = patchedCustomCount - buggyCustomCount
+        if opaqueGateReduction <= compositeGateIncrease:
             return True
-        return False
 
     return False
 

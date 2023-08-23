@@ -2,6 +2,7 @@ import ast
 import numpy as np
 import re
 
+#TODO: Add more iteration options (dictionaries and list comprehensions)
 def extractIters(node: ast.For):
     target = ast.Name(node.target)
     target_id = target.id
