@@ -189,7 +189,6 @@ def repeatedMeasurementError(codeSample):
                         and isinstance(node.value.func, ast.Name)
                         and node.value.func.id == 'QuantumCircuit'):
                     buggyMeasures[target.id] = 0
-
             
     for node in astPatched:
         if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
