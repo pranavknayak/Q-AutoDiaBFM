@@ -146,8 +146,6 @@ def customGateError(codeSample):
     return False
 
 
-
-
 def detectIncorrectGate(codeSample):
     status = False
     bugTypeMessage = "Incorrect usage of gate(s)."

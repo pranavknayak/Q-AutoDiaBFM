@@ -252,7 +252,6 @@ def repeatedMeasurementError(codeSample):
     return False
 
 
-
 def detectIncorrectMeasurement(codeSample):
     status = False
     bugTypeMessage = "Measurement(s) performed incorrectly."
