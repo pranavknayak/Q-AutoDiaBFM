@@ -61,7 +61,7 @@ def returnArgs(args):
     return np.array(paren)
 
 
-def checkIncorrectParam(codeSample):
+def checkIncorrectParam(codeSample, astSample):
     regex1 = ".+\..*"
     regex2 = ".+QuantumCircuit.*"
     availableInbuiltGates = [
@@ -86,7 +86,8 @@ def checkIncorrectParam(codeSample):
     patchedList = list(filter(("").__ne__, patched.split("\n")))
     buggyGate, patchedGate = {}, {}
     buggyQuantum, patchedQuantum = {}, {}
-    astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
+    # astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
+    astBuggy, astPatched = astSample[0], astSample[1]
 
     """ Retrieves all instances of a QuantumCircuit object in both, the buggy and patched codes."""
     for node in astBuggy:
@@ -172,9 +173,9 @@ def checkIncorrectParam(codeSample):
     return False
 
 
-def detectIncorrectInit(codeDiff):
+def detectIncorrectInit(codeDiff, astSample):
     status = False
     bugTypeMessage = "Incorrect initialization(s) attempted."
-    status = checkIncorrectParam(codeDiff)
+    status = checkIncorrectParam(codeDiff, astSample)
 
     return status, bugTypeMessage

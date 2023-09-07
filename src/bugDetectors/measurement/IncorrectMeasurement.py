@@ -55,7 +55,7 @@ def returnArgs(args):
     return np.array(paren)
 
 
-def measurementRegisterError(codeSample):
+def measurementRegisterError(codeSample, astSample):
     availableMeasurementFunctions = ["measure", "measure_all", "measure_inactive"]
     regexPattern = ".+\.measure.*"
     buggy, patched = codeSample[0], codeSample[1]
@@ -65,7 +65,8 @@ def measurementRegisterError(codeSample):
     patchedList = list(filter(("").__ne__, patched.split("\n")))
     buggyLine, patchedLine = {}, {}
     buggyArgs, patchedArgs = [], []
-    astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
+    # astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
+    astBuggy, astPatched = astSample[0], astSample[1]
 
     """ Deduce if there is a Quantum Circuit object associated with the patch."""
     for node in astBuggy:
@@ -112,7 +113,7 @@ def measurementRegisterError(codeSample):
                         getattr(node, "value").func.attr
                     )
 
-    """ Considering the cases when there is a one to one mapping of the QuantumCircuits 
+    """ Considering the cases when there is a one to one mapping of the QuantumCircuits
     in buggy code to the QuantumCircuits in patched code. """
 
     if len(buggyMeasures) != len(patchedMeasures):
@@ -170,7 +171,7 @@ def measurementRegisterError(codeSample):
 
     return False
 
-def repeatedMeasurementError(codeSample):
+def repeatedMeasurementError(codeSample, astSample):
     availableMeasurementFunctions = ["measure", "measure_all", "measure_inactive"]
     regexPattern = ".+\.measure.*"
 
@@ -180,7 +181,8 @@ def repeatedMeasurementError(codeSample):
     patchedList = list(filter(("").__ne__, patched.split("\n")))
     buggyLine, patchedLine = {}, {}
     buggyArgs, patchedArgs = [], []
-    astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
+    # astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
+    astBuggy, astPatched = astSample[0], astSample[1]
 
     for node in astBuggy:
         if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
@@ -189,7 +191,7 @@ def repeatedMeasurementError(codeSample):
                         and isinstance(node.value.func, ast.Name)
                         and node.value.func.id == 'QuantumCircuit'):
                     buggyMeasures[target.id] = 0
-            
+
     for node in astPatched:
         if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
             for target in node.targets:
@@ -200,8 +202,9 @@ def repeatedMeasurementError(codeSample):
 
 
 
+    #TODO: Cache AST to use in multiple passes instead of recreating it
     astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
-    
+
     buggyCircIDs, patchedCircIDs = buggyMeasures.keys(), patchedMeasures.keys()
 
     for node in astBuggy:
@@ -251,9 +254,9 @@ def repeatedMeasurementError(codeSample):
     return False
 
 
-def detectIncorrectMeasurement(codeSample):
+def detectIncorrectMeasurement(codeSample, astSample):
     status = False
     bugTypeMessage = "Measurement(s) performed incorrectly."
-    status = measurementRegisterError(codeSample) | repeatedMeasurementError(codeSample)
+    status = measurementRegisterError(codeSample, astSample) | repeatedMeasurementError(codeSample, astSample)
 
     return status, bugTypeMessage

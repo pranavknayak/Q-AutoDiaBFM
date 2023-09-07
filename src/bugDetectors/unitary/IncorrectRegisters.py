@@ -3,7 +3,7 @@ import re
 
 from numpy import who
 
-def checkIncorrectRegisters(codeSample):
+def checkIncorrectRegisters(codeSample, astSample):
     
     classicalRegex = ".+ClassicalRegister.*"
     quantumRegex = ".+QuantumRegister.*"
@@ -17,7 +17,8 @@ def checkIncorrectRegisters(codeSample):
     patchedClassicalRegisters = {}
     patchedQuantumRegisters = {}
 
-    astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
+    # astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
+    astBuggy, astPatched = astSample[0], astSample[1]
 
     for line in buggyList:
         temporaryStatus = re.search(classicalRegex, line)
@@ -114,9 +115,9 @@ def checkIncorrectRegisters(codeSample):
                 return True
     return False
 
-def detectIncorrectRegisters(codeDiff):
+def detectIncorrectRegisters(codeDiff, astSample):
     status = False
     bugTypeMessage = "Unequal bits vs. qubits during QuantumCircuit initialization(s)."
-    status = checkIncorrectRegisters(codeDiff)
+    status = checkIncorrectRegisters(codeDiff, astSample)
 
     return status, bugTypeMessage

@@ -2,7 +2,7 @@ import ast
 import re
 
 
-def inbuiltGateError(codeSample):
+def inbuiltGateError(codeSample, astSample):
     availableInbuiltGates = [
         "ccx",
         "cx",
@@ -25,7 +25,8 @@ def inbuiltGateError(codeSample):
     buggyList = list(filter(("").__ne__, buggy.split("\n")))
     patchedList = list(filter(("").__ne__, patched.split("\n")))
     buggyGate, patchedGate = [], []
-    astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
+    # astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
+    astBuggy, astPatched = astSample[0], astSample[1]
 
     """ Retrieves all instances of a QuantumCircuit object in both, the buggy and patched codes."""
     for node in astBuggy:
@@ -79,11 +80,12 @@ def inbuiltGateError(codeSample):
 
     return False
 
-def customGateError(codeSample):
+def customGateError(codeSample, astSample):
     buggy, patched = codeSample[0], codeSample[1]
     buggyList = list(filter(("").__ne__, buggy.split("\n")))
     patchedList = list(filter(("").__ne__, patched.split("\n")))
-    astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
+    # astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
+    astBuggy, astPatched = astSample[0], astSample[1]
     buggyGateIDs = {}
     buggyCustomIDs = {}
 
@@ -146,9 +148,9 @@ def customGateError(codeSample):
     return False
 
 
-def detectIncorrectGate(codeSample):
+def detectIncorrectGate(codeSample, astSample):
     status = False
     bugTypeMessage = "Incorrect usage of gate(s)."
-    status |= inbuiltGateError(codeSample) | customGateError(codeSample)
+    status |= inbuiltGateError(codeSample, astSample) | customGateError(codeSample, astSample)
 
     return status, bugTypeMessage
