@@ -28,8 +28,8 @@ def assessBugClass(bugFolder: str, codeSample, style: threadingStyle):
     buggy = codeSample[0]
     patched = codeSample[1]
 
-    buggyAST = ast.walk(ast.parse(buggy))
-    patchedAST = ast.walk(ast.parse(patched))
+    buggyAST = (ast.parse(buggy))
+    patchedAST = (ast.parse(patched))
 
     astSample = (buggyAST, patchedAST)
     bugTypeMessages = {}

@@ -4,7 +4,7 @@ import re
 from numpy import who
 
 def checkIncorrectRegisters(codeSample, astSample):
-    
+
     classicalRegex = ".+ClassicalRegister.*"
     quantumRegex = ".+QuantumRegister.*"
 
@@ -18,7 +18,7 @@ def checkIncorrectRegisters(codeSample, astSample):
     patchedQuantumRegisters = {}
 
     # astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
-    astBuggy, astPatched = astSample[0], astSample[1]
+    astBuggy, astPatched = ast.walk(astSample[0]), ast.walk(astSample[1])
 
     for line in buggyList:
         temporaryStatus = re.search(classicalRegex, line)
@@ -40,7 +40,7 @@ def checkIncorrectRegisters(codeSample, astSample):
             else:
                 count = int(args[1:-1])
             buggyQuantumRegisters[register] = count
-            
+
     for line in patchedList:
         temporaryStatus = re.search(classicalRegex, line)
         if temporaryStatus is not None:
@@ -85,6 +85,7 @@ def checkIncorrectRegisters(codeSample, astSample):
                 if registerFound == 0:
                     if isinstance(funcCall.args[0], ast.Constant):
                         buggyCircs[circ]['qubits'] += funcCall.args[0].value
+                    if len(funcCall.args) > 1:
                         buggyCircs[circ]['bits'] += funcCall.args[1].value
 
 
@@ -103,10 +104,11 @@ def checkIncorrectRegisters(codeSample, astSample):
                     if isinstance(arg, ast.Name) and arg.id in patchedQuantumRegisters:
                         patchedCircs[circ]['qubits'] += patchedQuantumRegisters[arg.id]
                         registerFound = 1
-    
+
                 if registerFound == 0:
                     if isinstance(funcCall.args[0], ast.Constant):
                         patchedCircs[circ]['qubits'] += funcCall.args[0].value
+                    if len(funcCall.args) > 1:
                         patchedCircs[circ]['bits'] += funcCall.args[1].value
 
     for circuit in buggyCircs:

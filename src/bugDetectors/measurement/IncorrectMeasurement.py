@@ -66,7 +66,7 @@ def measurementRegisterError(codeSample, astSample):
     buggyLine, patchedLine = {}, {}
     buggyArgs, patchedArgs = [], []
     # astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
-    astBuggy, astPatched = astSample[0], astSample[1]
+    astBuggy, astPatched = ast.walk(astSample[0]), ast.walk(astSample[1])
 
     """ Deduce if there is a Quantum Circuit object associated with the patch."""
     for node in astBuggy:
@@ -182,7 +182,7 @@ def repeatedMeasurementError(codeSample, astSample):
     buggyLine, patchedLine = {}, {}
     buggyArgs, patchedArgs = [], []
     # astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
-    astBuggy, astPatched = astSample[0], astSample[1]
+    astBuggy, astPatched = ast.walk(astSample[0]), ast.walk(astSample[1])
 
     for node in astBuggy:
         if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):

@@ -87,7 +87,7 @@ def checkIncorrectParam(codeSample, astSample):
     buggyGate, patchedGate = {}, {}
     buggyQuantum, patchedQuantum = {}, {}
     # astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
-    astBuggy, astPatched = astSample[0], astSample[1]
+    astBuggy, astPatched = ast.walk(astSample[0]), ast.walk(astSample[1])
 
     """ Retrieves all instances of a QuantumCircuit object in both, the buggy and patched codes."""
     for node in astBuggy:
@@ -137,6 +137,7 @@ def checkIncorrectParam(codeSample, astSample):
     """ Checks if the arguments are amongst the possible arguments for a QuantumCircuit
         object in both codes.
     """
+    # TODO: Check if args are ints before passing, if not then directly store the variable names
     for line in buggyList:
         temporaryStatus = re.search(regex2, line)
         if temporaryStatus is not None:
@@ -155,6 +156,8 @@ def checkIncorrectParam(codeSample, astSample):
     buggyQuantumValue, patchedQuantumValue = list(buggyQuantum.values()), list(
         patchedQuantum.values()
     )
+
+    # TODO: Update this logic to account for the value lists containing strings and not just ints
 
     for i in range(len(buggyQuantumValue)):
         if buggyQuantumValue[i].shape != patchedQuantumValue[i].shape:

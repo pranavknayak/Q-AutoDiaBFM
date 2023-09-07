@@ -26,7 +26,7 @@ def inbuiltGateError(codeSample, astSample):
     patchedList = list(filter(("").__ne__, patched.split("\n")))
     buggyGate, patchedGate = [], []
     # astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
-    astBuggy, astPatched = astSample[0], astSample[1]
+    astBuggy, astPatched = ast.walk(astSample[0]), ast.walk(astSample[1])
 
     """ Retrieves all instances of a QuantumCircuit object in both, the buggy and patched codes."""
     for node in astBuggy:
@@ -47,7 +47,7 @@ def inbuiltGateError(codeSample, astSample):
                 ):
                     patchedID[id.id] = []
 
-    """ Considering the cases when there is a one to one mapping of the QuantumCircuits 
+    """ Considering the cases when there is a one to one mapping of the QuantumCircuits
     in buggy code to the QuantumCircuits in patched code. """
     if len(buggyID) != len(patchedID):
         return False
@@ -85,15 +85,15 @@ def customGateError(codeSample, astSample):
     buggyList = list(filter(("").__ne__, buggy.split("\n")))
     patchedList = list(filter(("").__ne__, patched.split("\n")))
     # astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
-    astBuggy, astPatched = astSample[0], astSample[1]
+    astBuggy, astPatched = ast.walk(astSample[0]), ast.walk(astSample[1])
     buggyGateIDs = {}
     buggyCustomIDs = {}
 
     for node in astBuggy:
         if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
             for target in node.targets:
-                if (target.id not in buggyGateIDs 
-                        and isinstance(node.value.func, ast.Name) 
+                if (target.id not in buggyGateIDs
+                        and isinstance(node.value.func, ast.Name)
                         and node.value.func.id == 'Gate'):
                     gate = node.value
                     for argument in gate.args:
@@ -110,7 +110,7 @@ def customGateError(codeSample, astSample):
                         and node.value.func.attr == 'to_instruction'):
                     buggyCustomIDs[target.id] = []
 
-                
+
 
 
     patchedGateIDs = {}
@@ -118,8 +118,8 @@ def customGateError(codeSample, astSample):
     for node in astPatched:
         if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
             for target in node.targets:
-                if (target.id not in patchedGateIDs 
-                        and isinstance(node.value.func, ast.Name) 
+                if (target.id not in patchedGateIDs
+                        and isinstance(node.value.func, ast.Name)
                         and node.value.func.id == 'Gate'):
                     gate = node.value
                     for argument in gate.args:
