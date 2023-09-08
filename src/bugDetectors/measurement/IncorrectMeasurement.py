@@ -202,7 +202,7 @@ def repeatedMeasurementError(codeSample, astSample):
 
 
 
-    #TODO: Cache AST to use in multiple passes instead of recreating it
+
     astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
 
     buggyCircIDs, patchedCircIDs = buggyMeasures.keys(), patchedMeasures.keys()
