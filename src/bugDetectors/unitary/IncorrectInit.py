@@ -143,7 +143,6 @@ def checkIncorrectParam(codeSample, astSample):
     """ Checks if the arguments are amongst the possible arguments for a QuantumCircuit
         object in both codes.
     """
-    # TODO: Check if args are ints before passing, if not then directly store the variable names
     for line in buggyList:
         temporaryStatus = re.search(regex2, line)
         if temporaryStatus is not None:
@@ -164,7 +163,6 @@ def checkIncorrectParam(codeSample, astSample):
         patchedQuantum.values()
     )
 
-    # TODO: Update this logic to account for the value lists containing strings and not just ints
 
     for i in range(len(buggyQuantumValue)):
         if buggyQuantumValue[i].shape != patchedQuantumValue[i].shape:
