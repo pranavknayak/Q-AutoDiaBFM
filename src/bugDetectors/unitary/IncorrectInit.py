@@ -54,9 +54,15 @@ def returnArgs(args):
     for args in range(len(paren)):
         if isinstance(paren[args], list):
             for index in range(len(paren[args])):
-                paren[args][index] = eval(paren[args][index])
+                try:
+                    paren[args][index] = eval(paren[args][index])
+                except NameError:
+                    continue
         else:
-            paren[args] = eval(paren[args])
+            try:
+                paren[args] = eval(paren[args])
+            except NameError:
+                continue
 
     return np.array(paren)
 
@@ -148,7 +154,8 @@ def checkIncorrectParam(codeSample, astSample):
         temporaryStatus = re.search(regex2, line)
         if temporaryStatus is not None:
             args = line.split("QuantumCircuit")[1]
-            patchedQuantum[line] = returnArgs(args)
+            patchedQuantum[line] = returnArgs(args
+                                              )
 
     buggyGateValue, patchedGateValue = list(buggyGate.values()), list(
         patchedGate.values()
