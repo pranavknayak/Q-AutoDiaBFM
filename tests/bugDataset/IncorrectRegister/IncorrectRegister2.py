@@ -3,15 +3,24 @@ The following code-pair contains an IncorrectRegister bug.
 '''
 
 buggyCode = '''
-qc = QuantumCircuit(3, 3)
-qc.h(0)
-qc.x(range(3))
-qc.measure([0,1], [0, 1])
+qreg = QuantumRegister(3)
+numC = 2
+creg = ClassicalRegister(numC)
+circuit = QuantumCircuit(qreg, creg)
+circuit.y(0)
+circuit.cx(0, 1)
+circuit.cx(1, 2)
+circuit.measure([0,1,2], [0,1,2])
 '''
 
 patchedCode = '''
-qc = QuantumCircuit(3, 3)
-qc.h(0)
-qc.x(range(3))
-qc.measure([0,1], [1, 0])
+numC = 2
+qreg = QuantumRegister(3)
+numC += 1
+creg = ClassicalRegister(2)
+circuit = QuantumCircuit(qreg, creg)
+circuit.y(0)
+circuit.cx(0, 1)
+circuit.cx(1, 2)
+circuit.measure([0,1,2], [0,1,2])
 '''
