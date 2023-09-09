@@ -176,10 +176,6 @@ def repeatedMeasurementError(codeSample):
 
     buggy, patched = codeSample[0], codeSample[1]
     buggyMeasures, patchedMeasures = {}, {}
-    buggyList = list(filter(("").__ne__, buggy.split("\n")))
-    patchedList = list(filter(("").__ne__, patched.split("\n")))
-    buggyLine, patchedLine = {}, {}
-    buggyArgs, patchedArgs = [], []
     astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
 
     for node in astBuggy:
@@ -201,7 +197,6 @@ def repeatedMeasurementError(codeSample):
 
 
     astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
-    
     buggyCircIDs, patchedCircIDs = buggyMeasures.keys(), patchedMeasures.keys()
 
     for node in astBuggy:

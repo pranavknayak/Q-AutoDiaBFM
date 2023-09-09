@@ -1,7 +1,6 @@
 import ast
 import re
 
-from numpy import who
 
 def checkIncorrectRegisters(codeSample):
     
@@ -50,7 +49,6 @@ def checkIncorrectRegisters(codeSample):
             else:
                 count = int(args[1:-1])
             patchedClassicalRegisters[register] = count
-
 
         temporaryStatus = re.search(quantumRegex, line)
         if temporaryStatus is not None:
