@@ -37,9 +37,9 @@ def assessBugClass(bugFolder: str, codeSample, style: threadingStyle):
     """ Iterates through all available bug-fix classes at the current level."""
     for bugDirectory in bugDirectories:
         bugPackage = os.path.basename(bugDirectory)
-        bugTypeMessages[bugPackage] = []
         if bugPackage == "__pycache__":
             continue
+        bugTypeMessages[bugPackage] = []
         prober = importlib.import_module(
             bugFolder + "." + bugPackage + "." + bugPruningFileName,
             "../" + bugPackage + "/" + bugPruningFileName + ".py",
