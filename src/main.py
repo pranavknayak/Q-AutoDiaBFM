@@ -1,4 +1,3 @@
-#TODO: Test intermediate node logic
 """This code imports a module named "bugInvestigator" with an alias "bI".
 It then calls the function "classifyBugs" from the module with three arguments and prints the returned message to the console.
 """
