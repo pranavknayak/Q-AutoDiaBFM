@@ -7,6 +7,7 @@ from bugInvestigator import threadingStyle
 import importlib
 import os
 from pathlib import Path
+import re
 
 """ In the "assessBugClass" function, there is a boolean variable "prune" initialized to False.
 The function takes a code sample as input and returns the "prune" variable.
@@ -16,10 +17,15 @@ It is not clear what this function is used for as it does not perform any operat
 
 
 def assessBugClass(codeSample):
-    prune = True
-    """ Add in the short signature code here."""
-    return prune
+    unitaryRegex = ".+Gate.*"
+    buggy, patched = codeSample[0], codeSample[1]
+    buggyList = list(filter(("").__ne__, buggy.split("\n")))
 
+    for line in buggyList:
+        status = re.search(line, unitaryRegex)
+        if status is not None:
+            return True
+    return False
 
 """ In the "assessBugType" function, there are three parameters: bugFolder,
 codeSample, and style. The function initializes a boolean variable "prune" to False and an empty string variable "bugTypeMessage".

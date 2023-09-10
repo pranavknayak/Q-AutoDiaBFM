@@ -9,13 +9,14 @@ import os
 from pathlib import Path
 import ast
 
+
 bugPruningFileName = "probe"
 
 """ Assess which bug-fix class does the bug-fix pattern belong to, at this level of the tree."""
 
-
 def assessBugClass(bugFolder: str, codeSample, style: threadingStyle):
     prune = False
+
     _bugPackage_ = ""
     bugTypeMessage = ""
     bugDirectoryHandle = Path(__file__).parent.resolve()
