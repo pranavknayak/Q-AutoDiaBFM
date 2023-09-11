@@ -23,12 +23,12 @@ def assessBugClass(codeSample):
     buggyList = list(filter(("").__ne__, buggy.split("\n")))
 
     for line in buggyList:
-        status = re.search(line, unitaryRegex1)
+        status = re.search(unitaryRegex1, line)
         if status is not None:
             return True
 
     for line in buggyList:
-        status = re.search(line, unitaryRegex2)
+        status = re.search(unitaryRegex2, line)
         if status is not None:
             return True
 

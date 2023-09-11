@@ -23,7 +23,7 @@ def assessBugClass(codeSample):
     # patchedList = list(filter(("").__ne__, patched.split("\n")))
 
     for line in buggyList:
-        status = re.search(line, measurementRegex)
+        status = re.search(measurementRegex, line)
         if status is not None:
             return True
 

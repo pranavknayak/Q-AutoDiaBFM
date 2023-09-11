@@ -34,6 +34,7 @@ def assessBugClass(bugFolder: str, codeSample, style: threadingStyle):
 
     astSample = (buggyAST, patchedAST)
     bugTypeMessages = {}
+    bugFound = False
     """ Iterates through all available bug-fix classes at the current level."""
     for bugDirectory in bugDirectories:
         bugPackage = os.path.basename(bugDirectory)
@@ -62,8 +63,6 @@ def assessBugClass(bugFolder: str, codeSample, style: threadingStyle):
             )
             if status == True:
                 bugTypeMessages[bugPackage].append(bugTypeMessage)
-                continue
-            else:
-                prune = False
-                continue
-    return prune, bugTypeMessages
+            prune = False
+            bugFound |= status
+    return bugFound, bugTypeMessages

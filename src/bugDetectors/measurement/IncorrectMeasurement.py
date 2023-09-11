@@ -83,8 +83,8 @@ def measurementRegisterError(codeSample, astSample):
             if getattr(node, "value").func.attr in availableMeasurementFunctions:
                 if getattr(node, "value").func.value.id not in buggyMeasure:
                     buggyMeasure[getattr(node, "value").func.value.id] = []
-                    getattr(node, "value").func.attr
                     buggyMeasure[getattr(node, "value").func.value.id].append(
+                        getattr(node, "value").func.attr
                     )
                 else:
                     buggyMeasure[getattr(node, "value").func.value.id].append(
