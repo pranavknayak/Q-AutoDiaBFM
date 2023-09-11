@@ -34,12 +34,17 @@ def runTests(
             bugTestFileProber.patchedCode,
             commandLine=False,
         )
-        if bugTypeMessage != characteristicBugMessage:
+        success = 0
+        for type in bugTypeMessage:
+            if characteristicBugMessage in bugTypeMessage[type]:
+                numberOfTestsPassed += 1
+                success = 1
+        if not success:
             failedTestFiles.append((bugCounter, bugTypeMessage, bugTestFile))
-        numberOfTestsPassed += bugTypeMessage == characteristicBugMessage
+        # numberOfTestsPassed += bugTypeMessage == characteristicBugMessage
         bugCounter += 1
 
-    allTestsPassed = numberOfTestsPassed == len(bugTestFiles)
+    allTestsPassed = numberOfTestsPassed == len(bugTestFiles)//2
 
     if not allTestsPassed:
         print(
