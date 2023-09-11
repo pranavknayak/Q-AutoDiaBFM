@@ -62,7 +62,7 @@ def assessBugClass(bugFolder: str, codeSample, style: threadingStyle):
                 bugFolder + "." + _bugPackage_, codeSample, astSample, style
             )
             if status == True:
-                bugTypeMessages[bugPackage].append(bugTypeMessage)
+                bugTypeMessages[bugPackage] = bugTypeMessage
             prune = False
             bugFound |= status
     return bugFound, bugTypeMessages
