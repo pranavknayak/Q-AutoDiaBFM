@@ -1,6 +1,5 @@
 import ast
 import re
-from typing import assert_type
 import numpy as np
 
 def extractIters(node: ast.For):
