@@ -12,7 +12,6 @@ def extractIters(node: ast.For):
         return len(node.iter.elts)
 
 def checkHadamard(codeDiff, astSample):
-def checkHadamard(codeDiff, astSample):
     qubitRegex = "\.h\(.*\)"
     circuitRegex = ".+\.h"
 
