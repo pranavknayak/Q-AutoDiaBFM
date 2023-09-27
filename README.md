@@ -1,5 +1,5 @@
-### Automatic Diagnosis of Quantum Software Bug Fix Motifs [![GitHub version](https://badge.fury.io/gh/KrishnKher%2FQ-AutoDiaBFM.svg)](https://badge.fury.io/gh/KrishnKher%2FQ-AutoDiaBFM)
-## Q-Diff
+### Automated Detection of Quantum Bug Fix-Patterns [![GitHub version](https://badge.fury.io/gh/KrishnKher%2FQ-AutoDiaBFM.svg)](https://badge.fury.io/gh/KrishnKher%2FQ-AutoDiaBFM)
+## Q-PAC
 [![Visual Studio](https://badgen.net/badge/test/test/blue?icon=visualstudio)](https://badge.fury.io/gh/KrishnKher%2FQ-AutoDiaBFM)
 [![GitHub](https://badgen.net/badge/test/test/purple?icon=github)](https://badge.fury.io/gh/KrishnKher%2FQ-AutoDiaBFM)
 
