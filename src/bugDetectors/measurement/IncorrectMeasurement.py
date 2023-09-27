@@ -7,9 +7,11 @@ def extractIters(node: ast.For):
     target = ast.Name(node.target)
     target_id = target.id
     if isinstance(node.iter, ast.Call):
-        return  ast.Constant(node.iter.args[0]).value
+        iterations =  node.iter.args[0].value
+        return iterations
     elif isinstance(node.iter, ast.List):
-        return len(node.iter.elts)
+        iterations = len(node.iter.elts)
+        return iterations
 
 
 def returnArgs(args):
@@ -250,7 +252,17 @@ def repeatedMeasurementError(codeSample, astSample):
 
 def detectIncorrectMeasurement(codeSample, astSample):
     status = False
-    bugTypeMessage = "Measurement(s) performed incorrectly."
-    status = measurementRegisterError(codeSample, astSample) | repeatedMeasurementError(codeSample, astSample)
+    bugTypeMessage1 = "Measurement(s) performed incorrectly"
+    bugTypeMessage2 = "Excessive measurements performed"
+    status1 = measurementRegisterError(codeSample, astSample)
+    status2 = repeatedMeasurementError(codeSample, astSample)
+    bugTypeMessage = ''
+    if status1 and status2:
+        bugTypeMessage += bugTypeMessage1 + ' and ' + bugTypeMessage2 + '.'
+    elif status1:
+        bugTypeMessage += bugTypeMessage1 + '.'
+    elif status2:
+        bugTypeMessage += bugTypeMessage2 + '.'
+    status = status1 or status2
 
     return status, bugTypeMessage

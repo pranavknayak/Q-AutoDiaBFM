@@ -5,15 +5,17 @@ import bugInvestigator as bI
 
 
 buggyCode = '''
-creg = ClassicalRegister(5)
-qreg = QuantumRegister(6)
-qc = QuantumCircuit(creg, qreg)
+qc = QuantumCircuit(2, 2)
+for i in range(10):
+  qc.measure(0, 0)
+qc.measure(1, 1)
 '''
 
 patchedCode = '''
-creg1 = ClassicalRegister(5)
-qreg = QuantumRegister(5)
-qc = QuantumCircuit(creg1, qreg)
+qc = QuantumCircuit(2, 2)
+for i in range(5):
+  qc.measure(0, 0)
+qc.measure(1, 0)
 '''
 
 # Should return incorrectGate and incorrectInit
