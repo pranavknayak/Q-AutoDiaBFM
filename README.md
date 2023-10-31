@@ -35,27 +35,3 @@ cd src
 ```bash
 python3 main.py
 ```
-  
- # Instructions to run the tests:
- 
-1. Clone this repository:
-
-```bash
-git clone https://github.com/KrishnKher/Q-AutoDiaBFM
-```
-
-2. Navigate to the directory of the ```testRunner.py``` file:
-
-```bash
-cd tests
-```
-
-3. Pick a test method from ```tests/testGenerator.py``` and run it inside ```tests```.
-
-4. Run the following command in the console:
-
-```bash
-python3 testRunner.py
-```
-  
-  Please note that an example is already present in the tests folder.
