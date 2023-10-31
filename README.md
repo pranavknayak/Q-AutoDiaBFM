@@ -19,7 +19,7 @@ Examples demonstrations have been provided under the tests folder.
 1. Clone this repository:
 
 ```bash
-git clone https://github.com/KrishnKher/Q-AutoDiaBFM
+git clone https://github.com/pranavknayak/Q-PAC
 ```
 
 2. Navigate to the directory of the ```main.py``` file:
