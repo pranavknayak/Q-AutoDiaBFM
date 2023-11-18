@@ -4,13 +4,12 @@
 [![GitHub](https://badgen.net/badge/test/test/purple?icon=github)](https://badge.fury.io/gh/KrishnKher%2FQ-AutoDiaBFM)
 
 ```Q-PAC``` is an automated tool that detects bug-fix patterns in quantum codes. The tools classifies pairs of buggy and patched codes based on AST-parsers, RegEx checks and other semantic checks. Currently, the tool is still in a proof-of-concept (PoC) stage and has been designed only for certain classes of Qiskit codes:
-- ```IncorrectGate```.
-- ```IncorrectInit```.
-- ```IncorrectMeasurement```
-- ```IncorrectOpaqueGate```
-- ```UnequalBitsVsQubits```
-- ```ExcessiveMeasures```
-- ```InsufficientHadamardUse```
+- `ExcessiveMeasurements`
+- `IncorrectInitializations`
+- `IncorrectMeasurements`
+- `IncorrectOpaqueGates`
+- `IncorrectStandardGates`
+- `UnequalBits`
 
 Examples demonstrations have been provided under the tests folder.
 
