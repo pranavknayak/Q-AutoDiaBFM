@@ -1,3 +1,4 @@
+#TODO: Clean up all 6 examples
 '''
 The following code-pair contains an IncorrectRegister bug.
 '''
