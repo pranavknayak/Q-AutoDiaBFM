@@ -27,7 +27,7 @@ git clone https://github.com/pranavknayak/Q-PAC
 cd src
 ```
 
-3. Pass in two strings of code, one being the buggy and the other, the patched one to the ```bugInvestigator.classifyBugs($\cdot$, $\cdot$, $\cdot$)``` method.
+3. Pass in two strings of code, one being the buggy and the other, the patched one to the ```bugInvestigator.classifyBugs(buggy=..., patched=..., commandLine=...)``` method.
 
 4. Run the following command in the console:
 
