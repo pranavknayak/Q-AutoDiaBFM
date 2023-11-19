@@ -7,6 +7,7 @@ Patterns covered:
 - `IncorrectInitializations`
 - `IncorrectMeasurements`
 - `IncorrectOpaqueGates`
+- `IncorrectHadamardGates`
 - `IncorrectStandardGates`
 - `UnequalBits`
 

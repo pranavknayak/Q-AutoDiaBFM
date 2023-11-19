@@ -1,0 +1,17 @@
+'''
+The following code-pair contains an IncorrectHadamards bug.
+'''
+
+buggyCode = '''
+qc = QuantumCircuit(2)
+qc.h(0)
+qc.cx(0,1)
+
+'''
+
+patchedCode = '''
+qc = QuantumCircuit(2)
+qc.h(0)
+qc.cx(0,1)
+qc.h(0)
+'''
