@@ -101,6 +101,7 @@ def checkIncorrectParam(codeSample, astSample):
             for id in getattr(node, "targets"):
                 if (
                     id.id not in buggyID
+                    and getattr(node, "value").func.id is not None
                     and getattr(node, "value").func.id == "QuantumCircuit"
                 ):
                     buggyID[id.id] = []
@@ -184,6 +185,10 @@ def checkIncorrectParam(codeSample, astSample):
 def detectIncorrectInit(codeDiff, astSample):
     status = False
     bugTypeMessage = "Incorrect initialization(s) attempted."
+    # try:
     status = checkIncorrectParam(codeDiff, astSample)
-
+    # except:
+    #     # status = False
+    #     status = True
+    #     print("error in checkIncorrectParam")
     return status, bugTypeMessage

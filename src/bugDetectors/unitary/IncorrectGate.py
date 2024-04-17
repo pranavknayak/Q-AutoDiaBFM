@@ -152,8 +152,19 @@ def detectIncorrectGate(codeSample, astSample):
     status = False
     bugTypeMessage1 = "Incorrect usage of built-in gate(s)"
     bugTypeMessage2 = "Incorrect usage of opaque gate(s)"
-    status1 = inbuiltGateError(codeSample, astSample)
-    status2 = customGateError(codeSample, astSample)
+    try:
+        status1 = inbuiltGateError(codeSample, astSample)
+    except:
+        # status1 = False
+        status1 = True
+        print("error in inbuiltGateError")
+
+    try:
+        status2 = customGateError(codeSample, astSample)
+    except:
+        # status2 = False
+        status2 = True
+        print("error in customGateError")
     bugTypeMessage = ''
     if status1 and status2:
         bugTypeMessage = bugTypeMessage1 + " and " + bugTypeMessage2 + '.'

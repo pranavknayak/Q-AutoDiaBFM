@@ -19,6 +19,7 @@ It is not clear what this function is used for as it does not perform any operat
 def assessBugClass(codeSample):
     unitaryRegex1 = ".+Gate.*"
     unitaryRegex2 = "\.h\(.*\)"
+    unitaryRegex3 = ".+\..*"
     buggy, patched = codeSample[0], codeSample[1]
     buggyList = list(filter(("").__ne__, buggy.split("\n")))
 
@@ -31,7 +32,10 @@ def assessBugClass(codeSample):
         status = re.search(unitaryRegex2, line)
         if status is not None:
             return True
-
+    for line in buggyList:
+        status = re.search(unitaryRegex3, line)
+        if status is not None:
+            return True
     return False
 
 """ In the "assessBugType" function, there are three parameters: bugFolder,

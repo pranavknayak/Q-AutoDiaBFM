@@ -25,7 +25,8 @@ def findProbeFile():
     try:
         assert os.path.exists(bugPruningFilePath), "No 'probe.py' file detected."
     except AssertionError as errorMessage:
-        print(errorMessage)
+        # print(errorMessage)
+        pass
     finally:
         return
 

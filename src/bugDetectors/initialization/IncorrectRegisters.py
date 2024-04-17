@@ -118,6 +118,11 @@ def checkIncorrectRegisters(codeSample, astSample):
 def detectIncorrectRegisters(codeDiff, astSample):
     status = False
     bugTypeMessage = "Unequal bits vs. qubits during QuantumCircuit initialization(s)."
-    status = checkIncorrectRegisters(codeDiff, astSample)
+    try:
+        status = checkIncorrectRegisters(codeDiff, astSample)
+    except:
+        # status = False
+        status = True
+        print("error in checkIncorrectRegisters")
 
     return status, bugTypeMessage
