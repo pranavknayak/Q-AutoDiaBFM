@@ -6,4 +6,4 @@ cr = ClassicalRegister(2)
 circuit = QuantumCircuit(qr, cr)
 
 circuit.draw(output='mpl')
-circuit.h(qr(0))
+circuit.h(qr[0])
