@@ -94,26 +94,74 @@ def checkIncorrectParam(codeSample, astSample):
     buggyQuantum, patchedQuantum = {}, {}
     # astBuggy, astPatched = ast.walk(ast.parse(buggy)), ast.walk(ast.parse(patched))
     astBuggy, astPatched = ast.walk(astSample[0]), ast.walk(astSample[1])
+    buggyRegs, patchedRegs = {}, {}
+    buggy_int_vals, patched_int_vals = {}, {}
 
     """ Retrieves all instances of a QuantumCircuit object in both, the buggy and patched codes."""
     for node in astBuggy:
         if isinstance(node, ast.Assign):
             for id in getattr(node, "targets"):
-                if (
+                if isinstance(node.value, ast.Constant):
+                    buggy_int_vals[id.id] = node.value.value
+                elif (
                     id.id not in buggyID
-                    and getattr(node, "value").func.id is not None
+                    and isinstance(node.value, ast.Call)
+                    and isinstance(node.value.func, ast.Name)
                     and getattr(node, "value").func.id == "QuantumCircuit"
                 ):
-                    buggyID[id.id] = []
+                    args = node.value.args
+                    if isinstance(args[0], ast.Constant):
+                        qubits = args[0].value
+                    elif isinstance(args[0], ast.Name):
+                        if args[0].id in buggyRegs:
+                            qubits = buggyRegs[args[0].id]
+                        elif args[0].id in buggy_int_vals:
+                            qubits = buggy_int_vals[args[0].id]
+                    buggyID[id.id] = [0] * qubits
+                elif (
+                    id.id not in buggyRegs
+                    and isinstance(node.value, ast.Call)
+                    and isinstance(node.value.func, ast.Name)
+                    and node.value.func.id == "QuantumRegister"
+                ):
+                    if isinstance(node.value.args[0], ast.Name):
+                        buggyRegs[id.id] = buggy_int_vals[node.value.args[0].id]
+                    else:
+                        buggyRegs[id.id] = node.value.args[0].value
+
+
 
     for node in astPatched:
         if isinstance(node, ast.Assign):
             for id in getattr(node, "targets"):
-                if (
+                if isinstance(node.value, ast.Constant):
+                    patched_int_vals[id.id] = node.value.value
+                elif (
                     id.id not in patchedID
-                    and getattr(node, "value").func.id == "QuantumCircuit"
+                    and isinstance(node.value, ast.Call)
+                    and isinstance(node.value.func, ast.Name)
+                    and getattr(node, "value").func.id == "QuantumCircuit" # Throwing bug, investigate further.
                 ):
-                    patchedID[id.id] = []
+                    args = node.value.args
+                    if isinstance(args[0], ast.Constant):
+                        qubits = args[0].value
+                    elif isinstance(args[0], ast.Name):
+                        if args[0].id in patchedRegs:
+                            qubits = patchedRegs[args[0].id]
+                        elif args[0].id in patched_int_vals:
+                            qubits = patched_int_vals[args[0].id]
+
+                    patchedID[id.id] = [0] * qubits
+                elif (
+                    id.id not in patchedRegs
+                    and isinstance(node.value, ast.Call)
+                    and isinstance(node.value.func, ast.Name)
+                    and node.value.func.id == "QuantumRegister"
+                ):
+                    if isinstance(node.value.args[0], ast.Name):
+                        patchedRegs[id.id] = patched_int_vals[node.value.args[0].id]
+                    else:
+                        patchedRegs[id.id] = node.value.args[0].value
 
     """ Considering the cases when there is a one to one mapping of the QuantumCircuits
     in buggy code to the QuantumCircuits in patched code. """
@@ -185,10 +233,11 @@ def checkIncorrectParam(codeSample, astSample):
 def detectIncorrectInit(codeDiff, astSample):
     status = False
     bugTypeMessage = "Incorrect initialization(s) attempted."
-    # try:
-    status = checkIncorrectParam(codeDiff, astSample)
-    # except:
-    #     # status = False
-    #     status = True
-    #     print("error in checkIncorrectParam")
+    try:
+        status = checkIncorrectParam(codeDiff, astSample)
+    except:
+        status = False
+        # status = True
+        print("error in checkIncorrectParam")
+        raise
     return status, bugTypeMessage

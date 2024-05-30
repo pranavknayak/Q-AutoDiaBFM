@@ -33,7 +33,7 @@ build_state_vector(qpe, '1', s)
 n_hadamard(qpe, q, nancilla)
 
 for i in range(nancilla):
-    #Applying U^(2^(n-j)) on qubit j 
+    #Applying U^(2^(n-j)) on qubit j
     qpe.cu1(2*math.pi*theta*2**(nancilla-i-1), q[i], s[0])
 
 # Applying inverse QFT
@@ -45,5 +45,5 @@ for i in range(nancilla):
 backend = BasicAer.get_backend('qasm_simulator')
 shots = 2**17
 results = execute(qpe, backend, shots=1000).result()
-answer = results.get_counts()   
+answer = results.get_counts()
 print(answer)

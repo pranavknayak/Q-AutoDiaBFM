@@ -1,4 +1,5 @@
 from qiskit import *
+# from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
 from qiskit.providers.aer import *
 n = 3
 q = QuantumRegister(n)

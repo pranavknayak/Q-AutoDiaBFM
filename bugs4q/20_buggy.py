@@ -1,5 +1,5 @@
 from qiskit import *
-qreg = qk.QuantumRegister(7)
+qreg = QuantumRegister(7)
 layout = {qreg[0]: 12, 
           qreg[1]: 11,
           qreg[2]: 13, 

@@ -14,15 +14,18 @@ bug_vector = [0,
               0]
 
 for i in range(1, 65):
-
+  if i == 6 or i == 16 or i == 42 or i == 59:
+    continue
+            # 6 contains gate applications on an entire register
+            # 16 contains circuit definitions in function scope, not covered
+            # same for 42
+  # TODO: Rewrite the examples to move circuits to global scope
   if i < 10:
-    bugfile = f"./Q-PAC/Bugs4Q/0{i}_buggy.py"
-    fixedfile = f"./Q-PAC/Bugs4Q/0{i}_fixed.py"
-    if i == 6:
-      continue
+    bugfile = f"./bugs4q/0{i}_buggy.py"
+    fixedfile = "./bugs4q/0{i}_fixed.py"
   else:
-    bugfile = f"./Q-PAC/Bugs4Q/{i}_buggy.py"
-    fixedfile = f"./Q-PAC/Bugs4Q/{i}_fixed.py"
+    bugfile = f"./bugs4q/{i}_buggy.py"
+    fixedfile = f"./bugs4q/{i}_fixed.py"
   if os.path.isfile(bugfile) and os.path.isfile(fixedfile):
 
     buggyCode = open(bugfile, "r").read()
@@ -32,7 +35,7 @@ for i in range(1, 65):
     except BaseException as e:
       print(f"ERROR AT PAIR {i}")
       continue
-      # print(traceback.format_exc(e))
+      print(traceback.format_exc(e))
     if len(bugErrorMessage['unitary']) != 0:
       if "Incorrect usage of built-in gate(s) and Incorrect usage of opaque gate(s)." in bugErrorMessage['unitary']:
         bug_vector[4] += 1

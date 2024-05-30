@@ -1,5 +1,4 @@
 # TODO: Fix bug where detector returns true when only the qubit corresponding to the hadamard changes (FAILTEST: IncorrectInit0)
-# TODO: Handle 06_buggy.py, which applies gates on entire registers (potentially overcomplicating things)
 import ast
 import re
 import numpy as np
@@ -102,33 +101,51 @@ def checkHadamard(codeDiff, astSample):
 
     for line in buggyList:
         qbit_result = re.search(qubitRegex, line)
+        full_reg = False
         if qbit_result is None:
             continue
         qubit_id = qbit_result.group()[3:-1]
         if qubit_id.isnumeric():
             qubit_id = int(qubit_id)
         else:
-            id1 = qubit_id.find('[')
-            id2 = qubit_id.rfind(']')
-            qubit_id = int(qubit_id[id1 + 1:id2])
+            sqb_pattern = r'\[.*\]'
+            if re.search(sqb_pattern, qubit_id) is None:
+                full_reg = True
+            else:
+                id1 = qubit_id.find('[')
+                id2 = qubit_id.rfind(']')
+                qubit_id = int(qubit_id[id1 + 1:id2])
         circ_result = re.search(circuitRegex, line)
         circ_id = circ_result.group()[:-2].strip()
-        buggyID[circ_id][qubit_id] += 1
+        if full_reg:
+            for i in range(len(buggyID[circ_id])):
+                buggyID[circ_id][i] += 1
+        else:
+            buggyID[circ_id][qubit_id] += 1
 
     for line in patchedList:
         qbit_result = re.search(qubitRegex, line)
+        full_reg = False
         if qbit_result is None:
             continue
         qubit_id = qbit_result.group()[3:-1]
         if qubit_id.isnumeric():
             qubit_id = int(qubit_id)
         else:
-            id1 = qubit_id.find('[')
-            id2 = qubit_id.rfind(']')
-            qubit_id = int(qubit_id[id1 + 1:id2])
+            sqb_pattern = r'\[.*\]'
+            if re.search(sqb_pattern, qubit_id) is None:
+                full_reg = True
+            else:
+                id1 = qubit_id.find('[')
+                id2 = qubit_id.rfind(']')
+                qubit_id = int(qubit_id[id1 + 1:id2])
         circ_result = re.search(circuitRegex, line)
         circ_id = circ_result.group()[:-2].strip()
-        patchedID[circ_id][qubit_id] += 1
+        if full_reg:
+            for i in range(len(patchedID[circ_id])):
+                patchedID[circ_id][i] += 1
+        else:
+            patchedID[circ_id][qubit_id] += 1
 
     for circ in buggyID:
       if circ in patchedID:
@@ -144,8 +161,8 @@ def detectIncorrectHadamard(codeDiff, astSample):
         status = checkHadamard(codeDiff, astSample)
         print("checkHadamard WORKS")
     except:
-        # status = False
-        status = True
+        status = False
         print("error in checkHadamard")
+        raise
 
     return status, bugTypeMessage

@@ -16,4 +16,4 @@ meas_calibs, state_labels = complete_meas_cal(
 print(meas_calibs[0])
 
     # This line below is causing error if I add "initial_layout" in both qk.compiler.transpile and qk.execute
-.compiler.transpile(meas_calibs, initial_layout=layout)
+compiler.transpile(meas_calibs, initial_layout=layout)

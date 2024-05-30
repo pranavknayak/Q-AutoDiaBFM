@@ -257,15 +257,17 @@ def detectIncorrectMeasurement(codeSample, astSample):
     try:
         status1 = measurementRegisterError(codeSample, astSample)
     except:
-        # status1 = False
-        status1 = True
+        status1 = False
+        # status1 = True
         print("error in measurementRegisterError")
+        raise
     try:
         status2 = repeatedMeasurementError(codeSample, astSample)
     except:
-        # status2 = False
-        status2 = True
+        status2 = False
+        # status2 = True
         print("error in repeatedMeasurementError")
+        raise
     bugTypeMessage = ''
     if status1 and status2:
         bugTypeMessage += bugTypeMessage1 + ' and ' + bugTypeMessage2 + '.'

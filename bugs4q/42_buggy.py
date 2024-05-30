@@ -21,6 +21,7 @@ circuit.z(qin[0])
 circuit.t(qin[0])
 
 IQFT(circuit, qin, n)
+
 circuit.measure (qin, cr)
 
 

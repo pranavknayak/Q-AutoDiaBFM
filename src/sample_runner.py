@@ -5,18 +5,19 @@ import bugInvestigator as bI
 import os
 import traceback
 
-i = 12
+i = 10
 
 
 if i < 10:
-  bugfile = f"./Q-PAC/Bugs4Q/0{i}_buggy.py"
-  fixedfile = f"./Q-PAC/Bugs4Q/0{i}_fixed.py"
+  bugfile = f"./bugs4q/0{i}_buggy.py"
+  fixedfile = f"./bugs4q/0{i}_fixed.py"
 else:
-  bugfile = f"./Q-PAC/Bugs4Q/{i}_buggy.py"
-  fixedfile = f"./Q-PAC/Bugs4Q/{i}_fixed.py"
+  bugfile = f"./bugs4q/{i}_buggy.py"
+  fixedfile = f"./bugs4q/{i}_fixed.py"
 if os.path.isfile(bugfile) and os.path.isfile(fixedfile):
   buggyCode = open(bugfile, "r").read()
   fixedCode = open(fixedfile, "r").read()
+
 
 bugErrorMessage = bI.classifyBugs(buggy=buggyCode, patched=fixedCode, commandLine=False)
 
