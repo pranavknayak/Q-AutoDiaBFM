@@ -76,13 +76,15 @@ def measurementRegisterError(codeSample, astSample):
             for id in getattr(node, "targets"):
                 if (
                     id.id not in buggyMeasures
+                    and isinstance(node.value, ast.Call)
+                    and isinstance(node.value.func, ast.Name)
                     and getattr(node, "value").func.id == "QuantumCircuit"
                 ):
                     buggyMeasures[id.id] = []
 
         """ Using the AST to deduce if there is measure function amongst the aforementioned types."""
         if isinstance(node, ast.Expr):
-            if getattr(node, "value").func.attr in availableMeasurementFunctions:
+            if isinstance(node.value.func, ast.Attribute) and getattr(node, "value").func.attr in availableMeasurementFunctions:
                 if getattr(node, "value").func.value.id not in buggyMeasure:
                     buggyMeasure[getattr(node, "value").func.value.id] = []
                     buggyMeasure[getattr(node, "value").func.value.id].append(
@@ -98,13 +100,15 @@ def measurementRegisterError(codeSample, astSample):
         if isinstance(node, ast.Assign):
             for id in getattr(node, "targets"):
                 if (
-                    id.id not in patchedMeasures
+                    id.id not in buggyMeasures
+                    and isinstance(node.value, ast.Call)
+                    and isinstance(node.value.func, ast.Name)
                     and getattr(node, "value").func.id == "QuantumCircuit"
                 ):
                     patchedMeasures[id.id] = []
 
         if isinstance(node, ast.Expr):
-            if getattr(node, "value").func.attr in availableMeasurementFunctions:
+            if isinstance(node.value.func, ast.Attribute) and getattr(node, "value").func.attr in availableMeasurementFunctions:
                 if getattr(node, "value").func.value.id not in patchedMeasure:
                     patchedMeasure[getattr(node, "value").func.value.id] = []
                     patchedMeasure[getattr(node, "value").func.value.id].append(
