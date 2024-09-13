@@ -3,24 +3,30 @@ import ast
 import re
 import numpy as np
 
+    
+
+
 def extractIters(node: ast.For):
     target = ast.Name(node.target)
     target_id = target.id
     if isinstance(node.iter, ast.Call):
-        return  ast.Constant(node.iter.args[0]).value
+        return ast.Constant(node.iter.args[0]).value
     elif isinstance(node.iter, ast.List):
         return len(node.iter.elts)
 
+
 def checkHadamard(codeDiff, astSample):
-    qubitRegex = "\.h\(.*\)"
-    circuitRegex = ".+\.h"
+    qubitRegex = r"\.h\(.*\)"
+    circuitRegex = r".+\.h"
 
-
-    buggy_int_vals, patched_int_vals = {}, {} # stores integers and literals
+    buggy_int_vals, patched_int_vals = {}, {}  # stores integers and literals
 
     buggy, patched = codeDiff[0], codeDiff[1]
     buggyID, patchedID = {}, {}
-    buggyRegs, patchedRegs = {}, {} # Keeps track of register names and bit counts, for initializing circuits
+    buggyRegs, patchedRegs = (
+        {},
+        {},
+    )  # Keeps track of register names and bit counts, for initializing circuits
     buggyList = list(filter(("").__ne__, buggy.split("\n")))
     patchedList = list(filter(("").__ne__, patched.split("\n")))
 
@@ -45,6 +51,7 @@ def checkHadamard(codeDiff, astSample):
                     and isinstance(node.value.func, ast.Name)
                     and getattr(node, "value").func.id == "QuantumCircuit"
                 ):
+                    qubits = 0
                     args = node.value.args
                     if isinstance(args[0], ast.Constant):
                         qubits = args[0].value
@@ -65,8 +72,6 @@ def checkHadamard(codeDiff, astSample):
                     else:
                         buggyRegs[id.id] = node.value.args[0].value
 
-
-
     for node in patchedAST:
         if isinstance(node, ast.Assign):
             for id in getattr(node, "targets"):
@@ -76,8 +81,10 @@ def checkHadamard(codeDiff, astSample):
                     id.id not in patchedID
                     and isinstance(node.value, ast.Call)
                     and isinstance(node.value.func, ast.Name)
-                    and getattr(node, "value").func.id == "QuantumCircuit" # Throwing bug, investigate further.
+                    and getattr(node, "value").func.id
+                    == "QuantumCircuit"  # Throwing bug, investigate further.
                 ):
+                    qubits = 0
                     args = node.value.args
                     if isinstance(args[0], ast.Constant):
                         qubits = args[0].value
@@ -108,13 +115,13 @@ def checkHadamard(codeDiff, astSample):
         if qubit_id.isnumeric():
             qubit_id = int(qubit_id)
         else:
-            sqb_pattern = r'\[.*\]'
+            sqb_pattern = r"\[.*\]"
             if re.search(sqb_pattern, qubit_id) is None:
                 full_reg = True
             else:
-                id1 = qubit_id.find('[')
-                id2 = qubit_id.rfind(']')
-                qubit_id = int(qubit_id[id1 + 1:id2])
+                id1 = qubit_id.find("[")
+                id2 = qubit_id.rfind("]")
+                qubit_id = int(qubit_id[id1 + 1 : id2])
         circ_result = re.search(circuitRegex, line)
         circ_id = circ_result.group()[:-2].strip()
         if full_reg:
@@ -132,13 +139,13 @@ def checkHadamard(codeDiff, astSample):
         if qubit_id.isnumeric():
             qubit_id = int(qubit_id)
         else:
-            sqb_pattern = r'\[.*\]'
+            sqb_pattern = r"\[.*\]"
             if re.search(sqb_pattern, qubit_id) is None:
                 full_reg = True
             else:
-                id1 = qubit_id.find('[')
-                id2 = qubit_id.rfind(']')
-                qubit_id = int(qubit_id[id1 + 1:id2])
+                id1 = qubit_id.find("[")
+                id2 = qubit_id.rfind("]")
+                qubit_id = int(qubit_id[id1 + 1 : id2])
         circ_result = re.search(circuitRegex, line)
         circ_id = circ_result.group()[:-2].strip()
         if full_reg:
@@ -148,11 +155,12 @@ def checkHadamard(codeDiff, astSample):
             patchedID[circ_id][qubit_id] += 1
 
     for circ in buggyID:
-      if circ in patchedID:
-        for i in range(min(len(buggyID[circ]), len(patchedID[circ]))):
-          if buggyID[circ][i] % 2 != 0 and patchedID[circ][i] % 2 == 0:
-            return True
+        if circ in patchedID:
+            for i in range(min(len(buggyID[circ]), len(patchedID[circ]))):
+                if buggyID[circ][i] % 2 != 0 and patchedID[circ][i] % 2 == 0:
+                    return True
     return False
+
 
 def detectIncorrectHadamard(codeDiff, astSample):
     status = False

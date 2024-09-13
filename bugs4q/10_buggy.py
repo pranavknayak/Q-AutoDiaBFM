@@ -39,9 +39,7 @@ print(noise_bit_flip)
 simulator = QasmSimulator()
 
 # Run the noisy simulation
-job = execute(circ, simulator,
-              basis_gates = noise_bit_flip.basis_gates,
-              noise_model = noise_bit_flip)
+job = execute(circ, simulator, basis_gates = noise_bit_flip.basis_gates, noise_model = noise_bit_flip) # Removed multiline formatting for fargs
 result_bit_flip = job.result()
 counts_bit_flip = result_bit_flip.get_counts(0)
 

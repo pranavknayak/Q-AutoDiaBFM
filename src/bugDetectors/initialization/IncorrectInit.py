@@ -2,6 +2,9 @@
 # note that there are only a finite number of inbuilt gates in qiskit
 # provided the identifier is the same, check if the other files' gate matches with an inbuilt gate.
 # incase it is a custom made gate, think
+
+
+# Rewrite entire file, bugs4q breaks everything in this
 import ast
 import re
 import numpy as np
@@ -235,6 +238,7 @@ def detectIncorrectInit(codeDiff, astSample):
     bugTypeMessage = "Incorrect initialization(s) attempted."
     try:
         status = checkIncorrectParam(codeDiff, astSample)
+        print("checkIncorrectParam WORKS")
     except:
         status = False
         # status = True

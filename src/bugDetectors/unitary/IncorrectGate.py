@@ -18,7 +18,7 @@ def inbuiltGateError(codeSample, astSample):
         "y",
         "z",
     ]
-    regexPattern = ".+\..*"
+    regexPattern = r".+\..*"
 
     buggy, patched = codeSample[0], codeSample[1]
     buggyID, patchedID = {}, {}
@@ -70,6 +70,7 @@ def inbuiltGateError(codeSample, astSample):
         if isinstance(node, ast.Assign):
             for id in getattr(node, "targets"):
                 if isinstance(id, ast.Name):
+                    qubits = 0
                     if isinstance(node.value, ast.Constant):
                         patched_int_vals[id.id] = node.value.value
                     elif (

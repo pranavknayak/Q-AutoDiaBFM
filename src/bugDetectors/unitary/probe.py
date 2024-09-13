@@ -18,8 +18,8 @@ It is not clear what this function is used for as it does not perform any operat
 
 def assessBugClass(codeSample):
     unitaryRegex1 = ".+Gate.*"
-    unitaryRegex2 = "\.h\(.*\)"
-    unitaryRegex3 = ".+\..*"
+    unitaryRegex2 = r"\.h\(.*\)"
+    unitaryRegex3 = r".+\..*"
     buggy, patched = codeSample[0], codeSample[1]
     buggyList = list(filter(("").__ne__, buggy.split("\n")))
 

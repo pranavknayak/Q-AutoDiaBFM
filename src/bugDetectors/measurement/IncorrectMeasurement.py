@@ -6,9 +6,17 @@ import re
 def extractIters(node: ast.For):
     target = ast.Name(node.target)
     target_id = target.id
-    if isinstance(node.iter, ast.Call):
-        iterations =  node.iter.args[0].value
-        return iterations
+    if isinstance(node.iter, ast.Call) and isinstance(node.iter.func, ast.Name) and node.iter.func.id == 'range':
+        # Cannot handle range declarations with dynamically calculated endpoints
+        if len(node.iter.args) == 1:
+            if isinstance(node.iter.args[0], ast.Constant):
+                iterations = node.iter.args[0].value
+                return iterations
+        else:
+            if isinstance(node.iter.args[0], ast.Constant) and isinstance(node.iter.args[1], ast.Constant):
+                iterations = node.iter.args[1].value - node.iter.args[0].value
+                return iterations
+        return None
     elif isinstance(node.iter, ast.List):
         iterations = len(node.iter.elts)
         return iterations
@@ -58,6 +66,7 @@ def returnArgs(args):
 
 
 def measurementRegisterError(codeSample, astSample):
+    # TODO: Deprecate, replace with more robust AST traversal
     availableMeasurementFunctions = ["measure", "measure_all", "measure_inactive"]
     regexPattern = ".+\.measure.*"
     buggy, patched = codeSample[0], codeSample[1]
@@ -107,7 +116,7 @@ def measurementRegisterError(codeSample, astSample):
                 ):
                     patchedMeasures[id.id] = []
 
-        if isinstance(node, ast.Expr):
+        if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call):
             if isinstance(node.value.func, ast.Attribute) and getattr(node, "value").func.attr in availableMeasurementFunctions:
                 if getattr(node, "value").func.value.id not in patchedMeasure:
                     patchedMeasure[getattr(node, "value").func.value.id] = []
@@ -220,8 +229,9 @@ def repeatedMeasurementError(codeSample, astSample):
                         if id in buggyMeasures.keys() and func in availableMeasurementFunctions:
                             buggyMeasures[id] += iterations - 1
         else:
-            if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call):
-                id = node.value.func.value.id
+            if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Attribute):
+                if isinstance(node.value.func.value, ast.Name):
+                    id = node.value.func.value.id
                 func = node.value.func.attr
                 if id in buggyMeasures.keys() and func in availableMeasurementFunctions:
                     buggyMeasures[id] += 1
@@ -240,9 +250,10 @@ def repeatedMeasurementError(codeSample, astSample):
                         if id in patchedMeasures.keys() and func in availableMeasurementFunctions:
                             patchedMeasures[id] += iterations - 1
         else:
-            if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call):
-                id = node.value.func.value.id
-                func = node.value.func.attr
+            if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Attribute):
+                if isinstance(node.value.func.value, ast.Name):
+                    id = node.value.func.value.id
+                    func = node.value.func.attr
                 if id in patchedMeasures.keys() and func in availableMeasurementFunctions:
                     patchedMeasures[id] += 1
 
@@ -260,6 +271,7 @@ def detectIncorrectMeasurement(codeSample, astSample):
     bugTypeMessage2 = "Excessive measurements performed"
     try:
         status1 = measurementRegisterError(codeSample, astSample)
+        print("measurementRegister WORKS")
     except:
         status1 = False
         # status1 = True
@@ -267,6 +279,7 @@ def detectIncorrectMeasurement(codeSample, astSample):
         raise
     try:
         status2 = repeatedMeasurementError(codeSample, astSample)
+        print("repeatedMeasurement WORKS")
     except:
         status2 = False
         # status2 = True
