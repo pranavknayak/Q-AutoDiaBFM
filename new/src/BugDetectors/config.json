@@ -1,0 +1,27 @@
+{
+    "classes": {
+        "RootDetector": {
+            "Initialization": {},
+            "Measurement": {},
+            "Unitary": {}
+        },
+        "Initialization": {
+            "IncorrectInit": {},
+            "IncorrectRegisters": {}
+        },
+        "Measurement": {
+            "IncorrectMeasurement": {}
+        },
+        "Unitary": {
+            "IncorrectGate": {},
+            "IncorrectHadamard": {}
+        },
+        "IncorrectInit": {},
+        "IncorrectRegisters": {},
+        "IncorrectMeasurement": {},
+        "IncorrectGate": {},
+        "IncorrectHadamard": {}
+    },
+    "root_class": "RootDetector"
+}
+  
