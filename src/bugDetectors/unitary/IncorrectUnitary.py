@@ -1,9 +1,6 @@
-
-import re
 import numpy as np
-import ast
 
-def is_unitary(matrix, tol=1e-10):
+def isUnitary(matrix, tol=1e-10):
     """
     Check if a matrix is unitary.
 
@@ -14,79 +11,113 @@ def is_unitary(matrix, tol=1e-10):
     Returns:
     bool: True if the matrix is unitary, False otherwise.
     """
+    if matrix.shape[0] != matrix.shape[1]:
+        return False
     identity = np.eye(matrix.shape[0])
-    unitary_check = np.allclose(matrix.conj().T @ matrix, identity, atol=tol)
-    return unitary_check
+    unitaryCheck = np.allclose(matrix.conj().T @ matrix, identity, atol=tol)
+    return unitaryCheck
 
-def extract_arrays(code):
+def extractArraysFromCode(code):
     """
-    Extract arrays defined in the code.
+    Execute code in a controlled environment and extract arrays.
 
     Parameters:
-    code (str): The code string to parse.
+    code (str): The code string to execute.
 
     Returns:
     dict: A dictionary mapping variable names to numpy arrays.
     """
-    # Pattern to match variable assignments like variable = np.array([...])
-    pattern = r'(\w+)\s*=\s*np\.array\(([\s\S]*?)\)'
-    matches = re.findall(pattern, code)
     arrays = {}
-    for var, arr_str in matches:
-        try:
-            # Safely evaluate the array string to a Python object
-            arr = ast.literal_eval(arr_str)
-            arrays[var] = np.array(arr)
-        except:
-            pass  # Ignore if the array cannot be parsed
+    variables = {}
+    # Controlled execution environment
+    safeGlobals = {'__builtins__': None, 'np': np}
+    try:
+        exec(code, safeGlobals, variables)
+        # Recursively extract arrays from variables
+        for varName, value in variables.items():
+            foundArrays = extractArraysFromObject(value, varName)
+            arrays.update(foundArrays)
+    except Exception as e:
+        print(f"Error executing code: {e}")
     return arrays
 
-def identify_non_unitary_arrays(correct_code, buggy_code):
+def extractArraysFromObject(obj, name):
     """
-    Identify arrays in the buggy code that lead to non-unitary matrices.
+    Recursively extract arrays from an object (dicts, lists, numpy arrays).
 
     Parameters:
-    correct_code (str): The correct Python (Qiskit) code.
-    buggy_code (str): The buggy Python (Qiskit) code.
+    obj: The object to search.
+    name: The name of the variable or key.
+
+    Returns:
+    dict: A dictionary mapping variable names to numpy arrays.
+    """
+    arrays = {}
+    if isinstance(obj, np.ndarray):
+        arrays[name] = obj
+    elif isinstance(obj, dict):
+        for key, value in obj.items():
+            keyName = f"{name}['{key}']"
+            arrays.update(extractArraysFromObject(value, keyName))
+    elif isinstance(obj, list):
+        for idx, item in enumerate(obj):
+            idxName = f"{name}[{idx}]"
+            arrays.update(extractArraysFromObject(item, idxName))
+    return arrays
+
+def identifyNonUnitaryArrays(correctCode, buggyCode):
+    """
+    Identify arrays that are unitary in the correct code but not unitary in the buggy code.
+
+    Parameters:
+    correctCode (str): The correct Python code.
+    buggyCode (str): The buggy Python code.
 
     Returns:
     list: A list of variable names that lead to non-unitary matrices.
     """
-    correct_arrays = extract_arrays(correct_code)
-    buggy_arrays = extract_arrays(buggy_code)
-    non_unitary_arrays = []
-    for var in buggy_arrays:
-        if var in correct_arrays:
-            buggy_arr = buggy_arrays[var]
-            correct_arr = correct_arrays[var]
-            if not np.array_equal(buggy_arr, correct_arr):
-                if not is_unitary(buggy_arr):
-                    non_unitary_arrays.append(var)
-        else:
-            # Optionally check arrays not present in the correct code
-            buggy_arr = buggy_arrays[var]
-            if not is_unitary(buggy_arr):
-                non_unitary_arrays.append(var)
-    return non_unitary_arrays
+    correctArrays = extractArraysFromCode(correctCode)
+    buggyArrays = extractArraysFromCode(buggyCode)
+    nonUnitaryArrays = []
+    for varName, correctArr in correctArrays.items():
+        if isinstance(correctArr, np.ndarray):
+            # Check if the array is unitary in the correct code
+            if isUnitary(correctArr):
+                # Check if the corresponding array exists in the buggy code
+                if varName in buggyArrays:
+                    buggyArr = buggyArrays[varName]
+                    if isinstance(buggyArr, np.ndarray):
+                        # Check if the buggy array is not unitary
+                        if not isUnitary(buggyArr):
+                            nonUnitaryArrays.append(varName)
+    return nonUnitaryArrays
 
 # Example usage:
-correct_code = '''
+correctCode = '''
 import numpy as np
-A = np.array([[0, 1],
-              [1, 0]])
-B = np.array([[0, -1j],
-              [1j, 0]])
+z = 1
+z = z / abs(z)
+u_error = np.array([[1, 0], [0, z]])
+noise_params = {'U':
+    {'gate_time': 1,
+     'p_depol': 0.001,
+     'p_pauli': [0, 0, 0.01],
+     'U_error': u_error}
+}
 '''
 
-buggy_code = '''
+buggyCode = '''
 import numpy as np
-A = np.array([[1, 0],
-              [0, 1]])
-B = np.array([[1, 2],
-              [3, 4]])
-C = np.array([[0, -1],
-              [1, 0]])
+z = 1.1  # Incorrect value leading to non-unitary matrix
+# z = z / abs(z)  # Missing normalization in buggy code
+u_error = np.array([[1, 0], [0, z]])
+noise_params = {'U':
+    {'gate_time': 1,
+     'p_depol': 0.001,
+     'p_pauli': [0, 0, 0.01],
+     'U_error': u_error}
+}
 '''
 
-non_unitary_vars = identify_non_unitary_arrays(correct_code, buggy_code)
-print("Arrays leading to non-unitary matrices:", non_unitary_vars)
+nonUnitaryVars = identifyNonUnitaryArrays(correctCode, buggyCode)
+print("Arrays leading to non-unitary matrices:", nonUnitaryVars)
