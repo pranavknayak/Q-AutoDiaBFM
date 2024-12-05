@@ -92,32 +92,11 @@ def identifyNonUnitaryArrays(correctCode, buggyCode):
                             nonUnitaryArrays.append(varName)
     return nonUnitaryArrays
 
-# Example usage:
-correctCode = '''
-import numpy as np
-z = 1
-z = z / abs(z)
-u_error = np.array([[1, 0], [0, z]])
-noise_params = {'U':
-    {'gate_time': 1,
-     'p_depol': 0.001,
-     'p_pauli': [0, 0, 0.01],
-     'U_error': u_error}
-}
-'''
-
-buggyCode = '''
-import numpy as np
-z = 1.1  # Incorrect value leading to non-unitary matrix
-# z = z / abs(z)  # Missing normalization in buggy code
-u_error = np.array([[1, 0], [0, z]])
-noise_params = {'U':
-    {'gate_time': 1,
-     'p_depol': 0.001,
-     'p_pauli': [0, 0, 0.01],
-     'U_error': u_error}
-}
-'''
-
-nonUnitaryVars = identifyNonUnitaryArrays(correctCode, buggyCode)
-print("Arrays leading to non-unitary matrices:", nonUnitaryVars)
+def detectIncorrectUnitary(codeDiff, astSample):
+    status = identifyNonUnitaryArrays(codeDiff[1], codeDiff[0])
+    if status is not None:
+        status = True
+    else:
+        status = False
+    bugTypeMessage = "Non-unitary matrix(ces) (which is/are supposed to be unitary) found."
+    return status, bugTypeMessage
