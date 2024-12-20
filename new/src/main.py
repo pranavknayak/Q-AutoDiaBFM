@@ -1,161 +1,74 @@
-"""This code imports a module named "bugInvestigator" with an alias "bI".
-It then calls the function "classifyBugs" from the module with three arguments and prints the returned message to the console.
-"""
-
 import os
 import traceback
-import argparse
 from BugInvestigator import BugInvestigator
 from CodeProcessor import CodeProcessor
 
-
 if __name__ == "__main__":
-	bug_investigator = BugInvestigator("BugDetectors/config.json")
-	bug_investigator.build_class_hierarchy()
+    # Initialize BugInvestigator
+    bug_investigator = BugInvestigator("BugDetectors/config.json")
+    bug_investigator.build_class_hierarchy()
 
-	bug_vector = [0,
-				0,
-				0,
-				0,
-				0,
-				0,
-				0]
+    # Initialize the bug vector
+    bug_vector = [0, 0, 0, 0, 0, 0, 0]
 
-	for i in range(1, 64):
-		if i == 6 or i == 16 or i == 42 or i == 59:
-			continue
-					# 6 contains gate applications on an entire register
-					# 16 contains circuit definitions in function scope, not covered
-					# same for 42
-		# TODO: Rewrite the examples to move circuits to global scope
+    # Path to the directory containing test folders
+    testcases_dir = "../tests"
 
-		if i < 10:
-			bugfile = f"../bugs4q/0{i}_buggy.py"
-			fixedfile = "../bugs4q/0"+str(i)+"_fixed.py"
-		else:
-			bugfile = f"../bugs4q/{i}_buggy.py"
-			fixedfile = f"../bugs4q/{i}_fixed.py"
-		if os.path.isfile(bugfile) and os.path.isfile(fixedfile):
+    # Iterate through test folders
+    for folder_name in os.listdir(testcases_dir):
+        folder_path = os.path.join(testcases_dir, folder_name)
+        if os.path.isdir(folder_path) and folder_name.startswith("test_"):
+            # Extract test number
+            test_number = folder_name.split("_")[1]
 
-			buggyCode = open(bugfile, "r").read()
-			fixedCode = open(fixedfile, "r").read()
+            # Define buggy and fixed file paths
+            buggy_file = os.path.join(folder_path, f"{test_number}_buggy.py")
+            fixed_file = os.path.join(folder_path, f"{test_number}_fixed.py")
 
-			test = CodeProcessor(buggyCode, fixedCode)
-			#print(test.get_buggy(), test.get_patched())
-			#bugErrorMessage = bug_investigator.detect_pattern(test)
-			try:
-				bugErrorMessage = bug_investigator.detect_pattern(test)
-			except BaseException as e:
-				print(f"ERROR AT PAIR {i}")
-				continue
-				print(traceback.format_exc(e))
-			# if len(bugErrorMessage['unitary']) != 0:
-			# 	if "Incorrect usage of built-in gate(s) and Incorrect usage of opaque gate(s)." in bugErrorMessage['unitary']:
-			# 		bug_vector[4] += 1
-			# 		bug_vector[5] += 1
-			# 	elif "Incorrect usage of built-in gate(s)." in bugErrorMessage['unitary']:
-			# 		bug_vector[4] += 1
-			# 	elif "Incorrect usage of opaque gate(s)." in bugErrorMessage['unitary']:
-			# 		bug_vector[5] += 1
+            # Check if both files exist
+            if os.path.isfile(buggy_file) and os.path.isfile(fixed_file):
+                try:
+                    # Read buggy and fixed code
+                    buggy_code = open(buggy_file, "r").read()
+                    fixed_code = open(fixed_file, "r").read()
 
-			# 	if "Unclosed Hadamard gate detected." in bugErrorMessage['unitary']:
-			# 		bug_vector[6] += 1
+                    # Process the code
+                    test = CodeProcessor(buggy_code, fixed_code)
 
-			# if len(bugErrorMessage['measurement']) != 0:
-			# 	if "Measurement(s) performed incorrectly and Excessive measurements performed." in bugErrorMessage['measurement']:
-			# 		bug_vector[2] += 1
-			# 		bug_vector[3] += 1
-			# 	elif "Measurement(s) performed incorrectly." in bugErrorMessage['measurement']:
-			# 		bug_vector[2] += 1
-			# 	elif "Excessive measurements performed." in bugErrorMessage['measurement']:
-			# 		bug_vector[3] += 1
+                    # Detect patterns
+                    bugErrorMessage = bug_investigator.detect_pattern(test)
+                    print(f"Results for {folder_name}: {bugErrorMessage}")
 
-			# if len(bugErrorMessage['initialization']) != 0:
-			# 	if "Incorrect initialization(s) attempted." in bugErrorMessage['initialization']:
-			# 		bug_vector[0] += 1
-			# 	if "Unequal bits vs. qubits during QuantumCircuit initialization(s)." in bugErrorMessage['initialization']:
-			# 		bug_vector[1] += 1
+                    # Update bug vector
+                    if bugErrorMessage['Unitary'] != 'None':
+                        if "Incorrect usage of built-in gate(s) and Incorrect usage of opaque gate(s)." in bugErrorMessage['Unitary']:
+                            bug_vector[4] += 1
+                            bug_vector[5] += 1
+                        elif "Incorrect usage of built-in gate(s)." in bugErrorMessage['Unitary']:
+                            bug_vector[4] += 1
+                        elif "Incorrect usage of opaque gate(s)." in bugErrorMessage['Unitary']:
+                            bug_vector[5] += 1
 
+                        if "Unclosed Hadamard gate detected." in bugErrorMessage['IncorrectHadamard']:
+                            bug_vector[6] += 1
 
+                    if bugErrorMessage['Measurement'] != 'None':
+                        if "Measurement(s) performed incorrectly and Excessive measurements performed." in bugErrorMessage['IncorrectMeasurement']:
+                            bug_vector[2] += 1
+                            bug_vector[3] += 1
+                        elif "Measurement(s) performed incorrectly." in bugErrorMessage['IncorrectMeasurement']:
+                            bug_vector[2] += 1
+                        elif "Excessive measurements performed." in bugErrorMessage['IncorrectMeasurement']:
+                            bug_vector[3] += 1
 
+                    if bugErrorMessage['Initialization'] != 'None':
+                        if "Incorrect initialization(s) attempted." in bugErrorMessage['IncorrectInit']:
+                            bug_vector[0] += 1
+                        if "Unequal bits vs. qubits during QuantumCircuit initialization(s)." in bugErrorMessage['IncorrectInit']:
+                            bug_vector[1] += 1
 
+                except BaseException as e:
+                    print(f"ERROR AT {folder_name}")
+                    print(traceback.format_exc())
 
-'''
-bug_vector = [0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0]
-
-for i in range(1, 65):
-  if i == 6 or i == 16 or i == 42 or i == 59:
-    continue
-            # 6 contains gate applications on an entire register
-            # 16 contains circuit definitions in function scope, not covered
-            # same for 42
-  # TODO: Rewrite the examples to move circuits to global scope
-
-  if i < 10:
-    bugfile = f"../bugs4q/0{i}_buggy.py"
-    fixedfile = "../bugs4q/0{i}_fixed.py"
-  else:
-    bugfile = f"../bugs4q/{i}_buggy.py"
-    fixedfile = f"../bugs4q/{i}_fixed.py"
-  if os.path.isfile(bugfile) and os.path.isfile(fixedfile):
-
-    buggyCode = open(bugfile, "r").read()
-    fixedCode = open(fixedfile, "r").read()
-    try:
-      bugErrorMessage = bI.classifyBugs(buggy=buggyCode, patched=fixedCode, commandLine=False)
-    except BaseException as e:
-      print(f"ERROR AT PAIR {i}")
-      continue
-      print(traceback.format_exc(e))
-    if len(bugErrorMessage['unitary']) != 0:
-      if "Incorrect usage of built-in gate(s) and Incorrect usage of opaque gate(s)." in bugErrorMessage['unitary']:
-        bug_vector[4] += 1
-        bug_vector[5] += 1
-      elif "Incorrect usage of built-in gate(s)." in bugErrorMessage['unitary']:
-        bug_vector[4] += 1
-      elif "Incorrect usage of opaque gate(s)." in bugErrorMessage['unitary']:
-        bug_vector[5] += 1
-
-      if "Unclosed Hadamard gate detected." in bugErrorMessage['unitary']:
-        bug_vector[6] += 1
-
-    if len(bugErrorMessage['measurement']) != 0:
-      if "Measurement(s) performed incorrectly and Excessive measurements performed." in bugErrorMessage['measurement']:
-        bug_vector[2] += 1
-        bug_vector[3] += 1
-      elif "Measurement(s) performed incorrectly." in bugErrorMessage['measurement']:
-        bug_vector[2] += 1
-      elif "Excessive measurements performed." in bugErrorMessage['measurement']:
-        bug_vector[3] += 1
-
-    if len(bugErrorMessage['initialization']) != 0:
-      if "Incorrect initialization(s) attempted." in bugErrorMessage['initialization']:
-        bug_vector[0] += 1
-      if "Unequal bits vs. qubits during QuantumCircuit initialization(s)." in bugErrorMessage['initialization']:
-        bug_vector[1] += 1
-
-print(bug_vector)
-
-
-'''
-
-# Should return incorrectGate and incorrectInit
-
-"""
-Pattern one-hot vector:
-[
- incorrect_init,
- incorrect_registers,
- incorrect_measurement,
- excessive_measurement,
- incorrect_standard_gate,
- incorrect_opaque_gate,
- unclosed_hadamard
-]
-"""
+    print("Final Bug Vector:", bug_vector)

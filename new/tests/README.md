@@ -1,14 +1,8 @@
-## Illustrative examples of what each detector looks for
+# Bugs4Q
 
-Contains example buggy-patched pairs for each detector. Half contain positive examples, that actually belong to the pattern, and the other half contain negative examples that do not belong to the pattern.
+Clean up of Zhao et al's Bugs4Q:
+  - Removed Cirq and Q# examples
+  - Removed buggy codes for which fixes are absent
+  - Consistent naming scheme
 
-Patterns covered:
-- `ExcessiveMeasurements`
-- `IncorrectInitializations`
-- `IncorrectMeasurements`
-- `IncorrectOpaqueGates`
-- `IncorrectHadamardGates`
-- `IncorrectStandardGates`
-- `UnequalBits`
-
-The examples are meant to be illustrative, and contain only those constructs that are relevant to the detector. 
+Meant for use with [Q-PAC](https://github.com/pranavknayak/Q-PAC)
